@@ -37,7 +37,7 @@ export function Sidebar() {
           <GraduationCap className="h-5 w-5" />
         </div>
         <span className="font-display text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-          MetaSRS
+          Vocabulous²
         </span>
       </div>
 
