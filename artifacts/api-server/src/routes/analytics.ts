@@ -350,7 +350,7 @@ router.get("/analytics/class/:classId/at-risk", async (req, res): Promise<void> 
       studentId: usersTable.id,
       studentName: usersTable.name,
       studentEmail: usersTable.email,
-      lastReviewedAt: sql<Date | null>`max(${reviewsTable.reviewedAt})`,
+      lastReviewedAt: sql<string | null>`max(${reviewsTable.reviewedAt})`,
       averageRetention: sql<number | null>`
         case when count(${reviewsTable.id}) > 0
         then cast(avg(case when ${reviewsTable.recalled} then 1.0 else 0.0 end) as double precision)

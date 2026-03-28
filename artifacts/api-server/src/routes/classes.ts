@@ -167,7 +167,7 @@ router.get("/classes/:id/students", async (req, res): Promise<void> => {
         then cast(avg(case when ${reviewsTable.recalled} then 1.0 else 0.0 end) as double precision)
         else null end
       `,
-      lastReviewedAt: sql<Date | null>`max(${reviewsTable.reviewedAt})`,
+      lastReviewedAt: sql<string | null>`max(${reviewsTable.reviewedAt})`,
     })
     .from(enrollmentsTable)
     .innerJoin(usersTable, eq(enrollmentsTable.studentId, usersTable.id))
