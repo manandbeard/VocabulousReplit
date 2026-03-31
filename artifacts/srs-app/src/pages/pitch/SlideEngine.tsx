@@ -43,7 +43,7 @@ export default function SlideEngine() {
         <p className="text-lg font-light text-slate-600 leading-relaxed text-left mb-4">
           The solution is Vocabulous, a Python-based adaptive scheduler that predicts recall when it's needed most. It targets a 60-80% "desirable difficulty" recall probability, resurfacing words from previously learned content automatically. The engine calculates the current recall probability for every word in the user's history and returns the items most at risk of being forgotten.
         </p>
-        <p className="text-lg font-light text-slate-600 leading-relaxed text-left">
+        <p className="text-lg font-light text-slate-600 leading-relaxed text-left mt-[-15px] mb-[-15px]">
           Want to see it in action? Click "Correct Recall" or "Memory Lapse" below. Try waiting longer to click and watch how it affects the recall probability.
         </p>
       </div>
