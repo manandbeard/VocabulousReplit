@@ -17,12 +17,6 @@ export function PitchDeckBanner() {
           <p className="text-2xl text-slate-600 mb-8 leading-relaxed font-light max-w-2xl mx-auto">
             Science-backed language learning platform powered by spaced repetition and adaptive difficulty
           </p>
-
-          <div className="flex gap-4 justify-center">
-            <button className="px-10 py-4 rounded-lg border-2 border-slate-900 text-slate-900 font-semibold hover:bg-slate-100 transition-colors text-lg">
-              Learn More
-            </button>
-          </div>
         </div>
       </div>
     </div>
