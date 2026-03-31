@@ -8,7 +8,7 @@ export function PitchDeckBanner() {
         <div className="text-center max-w-3xl px-8">
           <p className="text-slate-700 uppercase tracking-widest font-bold text-[20px] mb-[0px]">The Future of Learning</p>
           
-          <h1 className="text-7xl font-light leading-tight mb-8">
+          <h1 className="text-7xl font-light leading-tight mb-[6px]">
             <span className="text-transparent bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text font-bold">
               Vocabulous²
             </span>
