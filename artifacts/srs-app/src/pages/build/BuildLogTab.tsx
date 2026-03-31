@@ -13,26 +13,33 @@ const buildLogEntries = [
   {
     date: "March 25",
     title: "The Claude Convergence",
-    tldr: "Prompting Claude 4.6 to handle the complex retrieval math.",
+    tldr: "I've been playing with different prompts in Claude to test out the MetaSRS algorithm. I think I have the prompt I want to used and will throw it into Replit to build the Retrieval math engine.",
     highlight: "The math got heavy, fast.",
     tags: ["Logic", "Python"],
   },
   {
     date: "March 28",
     title: "UI > Math?",
-    tldr: "Realizing that if it doesn't look like an arcade, kids won't use it. Focusing on Neo-Brutalism.",
+    tldr: "Realized that Vocabulous doesn't need to look like an arcade. It just needs to work.",
+    highlight: null,
+    tags: ["UI/UX", "Design"],
+  },
+  {
+    date: "March 30",
+    title: "PitchDeck Power!",
+    tldr: "I played around with Replit's animation creator and made a sick background for the pitch and Hero Page.",
     highlight: null,
     tags: ["UI/UX", "Design"],
   },
 ];
 
 const tagColors: Record<string, string> = {
-  "Idea": "bg-blue-100 text-blue-800",
-  "Concept": "bg-indigo-100 text-indigo-800",
-  "Logic": "bg-purple-100 text-purple-800",
-  "Python": "bg-yellow-100 text-yellow-800",
+  Idea: "bg-blue-100 text-blue-800",
+  Concept: "bg-indigo-100 text-indigo-800",
+  Logic: "bg-purple-100 text-purple-800",
+  Python: "bg-yellow-100 text-yellow-800",
   "UI/UX": "bg-pink-100 text-pink-800",
-  "Design": "bg-red-100 text-red-800",
+  Design: "bg-red-100 text-red-800",
 };
 
 export default function BuildLogTab() {
@@ -64,9 +71,7 @@ export default function BuildLogTab() {
 
               {entry.highlight && (
                 <div className="bg-amber-50 border-l-4 border-l-amber-500 p-4 mb-4">
-                  <p className="italic text-amber-900">
-                    "{entry.highlight}"
-                  </p>
+                  <p className="italic text-amber-900">"{entry.highlight}"</p>
                 </div>
               )}
 
