@@ -1,6 +1,22 @@
 export default function Slide2() {
   return (
     <div className="w-full h-screen bg-white flex flex-col items-center justify-center px-8">
+      <style>{`
+        @keyframes pulse-loss {
+          0%, 100% { opacity: 0.6; }
+          50% { opacity: 1; }
+        }
+        @keyframes fill-loss {
+          0% { opacity: 0; }
+          100% { opacity: 0.15; }
+        }
+        .loss-area {
+          animation: fill-loss 1.5s ease-in-out 0.5s forwards;
+        }
+        .loss-text {
+          animation: pulse-loss 2s ease-in-out 1s infinite;
+        }
+      `}</style>
       <div className="max-w-3xl animate-in fade-in slide-in-from-bottom-4 duration-700">
         <h2 className="text-6xl font-light text-slate-900 mb-12 tracking-wide">
           The Forgetting Curve
@@ -20,6 +36,14 @@ export default function Slide2() {
           {/* Grid lines */}
           <line x1="40" y1="20" x2="40" y2="160" stroke="#e2e8f0" strokeWidth="1" />
           <line x1="40" y1="160" x2="380" y2="160" stroke="#e2e8f0" strokeWidth="1" />
+          
+          {/* Loss area fill under curve */}
+          <path
+            className="loss-area"
+            d="M 40 30 Q 100 40, 150 90 Q 200 130, 250 145 Q 300 150, 380 155 L 380 160 L 40 160 Z"
+            fill="#e11d48"
+            opacity="0"
+          />
           
           {/* Curve */}
           <path
@@ -42,7 +66,7 @@ export default function Slide2() {
           <text x="20" y="150" fontSize="12" fill="#64748b" textAnchor="end" fontWeight="300">
             30%
           </text>
-          <text x="200" y="70" fontSize="18" fill="#e11d48" fontWeight="500" textAnchor="middle">
+          <text className="loss-text" x="200" y="70" fontSize="18" fill="#e11d48" fontWeight="500" textAnchor="middle">
             70% Lost
           </text>
         </svg>
