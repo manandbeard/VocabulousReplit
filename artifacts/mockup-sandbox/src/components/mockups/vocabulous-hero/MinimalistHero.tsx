@@ -24,7 +24,7 @@ export function MinimalistHero() {
           <button className="px-8 py-3 rounded-lg bg-slate-900 text-white font-medium hover:bg-slate-800 transition-colors">
             Start Learning
           </button>
-          <button className="px-8 py-3 rounded-lg bg-slate-200 text-slate-900 font-medium hover:bg-slate-300 transition-colors">
+          <button className="px-8 py-3 rounded-lg bg-slate-200 text-slate-900 font-medium hover:bg-slate-300 transition-colors text-[18px]">
             Learn More
           </button>
         </div>
