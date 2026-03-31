@@ -1,4 +1,5 @@
 import { Clock, Brain, Zap } from "lucide-react";
+import { useState, useRef } from "react";
 
 export default function Slide3() {
   const pillars = [
@@ -19,8 +20,19 @@ export default function Slide3() {
     },
   ];
 
+  const [hoverId, setHoverId] = useState<number | null>(null);
+
   return (
     <div className="w-full h-screen bg-white flex flex-col items-center justify-center px-8">
+      <style>{`
+        @keyframes shimmer {
+          0%, 100% { text-shadow: none; }
+          50% { text-shadow: 0 0 20px rgba(59, 130, 246, 0.6); }
+        }
+        .shimmer-text {
+          animation: shimmer 1s ease-in-out infinite;
+        }
+      `}</style>
       <div className="max-w-5xl animate-in fade-in slide-in-from-bottom-4 duration-700">
         <h2 className="text-6xl font-light text-slate-900 mb-16 tracking-wide">
           Make Learning Stick.
@@ -29,10 +41,20 @@ export default function Slide3() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           {pillars.map((pillar, i) => {
             const Icon = pillar.icon;
+            const isHovered = hoverId === i;
             return (
-              <div key={i} className="flex flex-col items-start">
-                <Icon className="h-6 w-6 text-slate-400 mb-4" strokeWidth={1.5} />
-                <h3 className="text-xl font-semibold text-slate-900 mb-3">
+              <div
+                key={i}
+                className="flex flex-col items-start cursor-default transition-transform duration-300"
+                onMouseEnter={() => setHoverId(i)}
+                onMouseLeave={() => setHoverId(null)}
+              >
+                <Icon 
+                  className={`text-slate-400 mb-4 transition-all duration-300 ${isHovered ? "text-blue-600" : ""}`}
+                  size={32}
+                  strokeWidth={1.5}
+                />
+                <h3 className={`text-xl font-semibold text-slate-900 mb-3 transition-all duration-300 ${isHovered ? "shimmer-text scale-110" : "scale-100"}`}>
                   {pillar.title}
                 </h3>
                 <p className="text-sm font-light text-slate-600 leading-relaxed">
