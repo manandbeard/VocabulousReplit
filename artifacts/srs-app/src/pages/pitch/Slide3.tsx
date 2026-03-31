@@ -45,7 +45,7 @@ export default function Slide3() {
             return (
               <div
                 key={i}
-                className="flex flex-col items-start cursor-default transition-transform duration-300"
+                className="flex flex-col items-start cursor-default transition-transform duration-300 text-[20px]"
                 onMouseEnter={() => setHoverId(i)}
                 onMouseLeave={() => setHoverId(null)}
               >
