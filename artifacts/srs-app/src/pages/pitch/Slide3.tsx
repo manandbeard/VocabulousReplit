@@ -34,7 +34,7 @@ export default function Slide3() {
         }
       `}</style>
       <div className="max-w-5xl animate-in fade-in slide-in-from-bottom-4 duration-700">
-        <h2 className="text-6xl font-light text-slate-900 mb-16 tracking-wide">
+        <h2 className="text-6xl font-light text-slate-900 mb-16 tracking-wide ml-[-15px]">
           Make Learning Stick.
         </h2>
 
