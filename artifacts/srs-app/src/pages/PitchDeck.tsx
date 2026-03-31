@@ -8,14 +8,7 @@ const Slide4 = lazy(() => import("./pitch/Slide4"));
 const Slide5 = lazy(() => import("./pitch/Slide5"));
 const Slide6 = lazy(() => import("./pitch/Slide6"));
 
-const slides = [
-  { component: Slide1, key: "slide1" },
-  { component: Slide2, key: "slide2" },
-  { component: Slide3, key: "slide3" },
-  { component: Slide4, key: "slide4" },
-  { component: Slide5, key: "slide5" },
-  { component: Slide6, key: "slide6" },
-];
+const slides = [Slide1, Slide2, Slide3, Slide4, Slide5, Slide6];
 
 export default function PitchDeck() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -37,6 +30,8 @@ export default function PitchDeck() {
     if (e.key === "ArrowLeft") handlePrev();
   };
 
+  const CurrentSlide = slides[currentSlide];
+
   return (
     <div
       className="w-screen h-screen bg-slate-50 overflow-hidden font-['Inter']"
@@ -44,7 +39,7 @@ export default function PitchDeck() {
       tabIndex={0}
     >
       <Suspense fallback={<div className="flex items-center justify-center w-full h-full text-slate-400">Loading...</div>}>
-        {slides[currentSlide].component()}
+        <CurrentSlide />
       </Suspense>
 
       {/* Navigation */}
