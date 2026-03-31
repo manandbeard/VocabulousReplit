@@ -19,9 +19,6 @@ export function PitchDeckBanner() {
           </p>
 
           <div className="flex gap-4 justify-center">
-            <button className="px-10 py-4 rounded-lg bg-slate-900 text-white font-semibold hover:bg-slate-800 transition-colors text-lg">
-              View Pitch Deck
-            </button>
             <button className="px-10 py-4 rounded-lg border-2 border-slate-900 text-slate-900 font-semibold hover:bg-slate-100 transition-colors text-lg">
               Learn More
             </button>
