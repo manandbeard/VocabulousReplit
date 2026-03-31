@@ -6,6 +6,7 @@ export const modules: ModuleMap = {
   "./components/mockups/synaptic-web/SynapticWeb.tsx": () => import("../components/mockups/synaptic-web/SynapticWeb.tsx"),
   "./components/mockups/synaptic-web/SynapticWebDemo.tsx": () => import("../components/mockups/synaptic-web/SynapticWebDemo.tsx"),
   "./components/mockups/vocabulous-hero/GlassmorphicHero.tsx": () => import("../components/mockups/vocabulous-hero/GlassmorphicHero.tsx"),
+  "./components/mockups/vocabulous-hero/MinimalistBanner.tsx": () => import("../components/mockups/vocabulous-hero/MinimalistBanner.tsx"),
   "./components/mockups/vocabulous-hero/MinimalistHero.tsx": () => import("../components/mockups/vocabulous-hero/MinimalistHero.tsx"),
   "./components/mockups/vocabulous-hero/NeoBrutalistHero.tsx": () => import("../components/mockups/vocabulous-hero/NeoBrutalistHero.tsx"),
   "./components/mockups/vocabulous-hero/NeoRetroHero.tsx": () => import("../components/mockups/vocabulous-hero/NeoRetroHero.tsx"),
