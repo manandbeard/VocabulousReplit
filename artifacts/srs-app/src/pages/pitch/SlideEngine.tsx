@@ -1,112 +1,128 @@
 import { useState } from "react";
+import { Activity, Database, Smartphone } from "lucide-react";
 
 export default function SlideEngine() {
   const [flowState, setFlowState] = useState<'idle' | 'api' | 'engine'>('idle');
+  const [payload, setPayload] = useState({ correct: true, latency: 0 });
   const [recallProb, setRecallProb] = useState(45);
 
   const simulateFlow = (isCorrect: boolean) => {
-    setFlowState('api');
-    setTimeout(() => setFlowState('engine'), 800);
+    setFlowState('idle');
+    setPayload({ correct: isCorrect, latency: isCorrect ? 450 : 1200 });
+    
+    setTimeout(() => setFlowState('api'), 100);
+    setTimeout(() => setFlowState('engine'), 1200);
     setTimeout(() => {
-      setRecallProb((prev) => (isCorrect ? Math.min(prev + 20, 95) : Math.max(prev - 15, 12)));
+      setRecallProb((prev) => (isCorrect ? Math.min(prev + 25, 99) : Math.max(prev - 15, 12)));
       setFlowState('idle');
-    }, 1600);
+    }, 2400);
+  };
+
+  const getPacketPosition = () => {
+    if (flowState === 'idle') return '15%';
+    if (flowState === 'api') return '50%';
+    return '85%';
   };
 
   return (
-    <div className="w-full h-screen bg-white flex flex-col items-center justify-center px-8 font-['Inter']">
+    <div className="relative w-full h-screen bg-slate-50 flex flex-col items-center justify-center font-['Inter'] overflow-hidden">
       <style>{`
-        @keyframes flow-in {
-          0% { opacity: 0; transform: scale(0.8); }
-          100% { opacity: 1; transform: scale(1); }
+        @keyframes float-packet {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-8px); }
         }
-        @keyframes pulse-glow {
-          0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
-          50% { box-shadow: 0 0 0 8px rgba(59, 130, 246, 0); }
+        .packet-moving {
+          animation: float-packet 0.8s ease-in-out;
         }
-        .flow-active { animation: flow-in 0.6s ease-out; }
-        .engine-active { animation: pulse-glow 1s ease-out; }
       `}</style>
 
-      <div className="max-w-5xl animate-in fade-in slide-in-from-bottom-4 duration-700">
-        <h2 className="text-6xl font-light text-slate-900 mb-4 tracking-wide">
-          Meta-Learned Spaced Retrieval
-        </h2>
-        <p className="text-lg font-light text-slate-600 leading-relaxed mb-16 max-w-4xl">
-          A Python-based adaptive scheduler that predicts recall. It targets a 60-80% "desirable difficulty" recall probability, surfacing words from The Crucible automatically during the Fahrenheit 451 unit.
-        </p>
+      {/* Header */}
+      <div className="absolute top-16 left-16">
+        <h2 className="text-3xl font-light tracking-wide text-slate-900">Meta-Learned Spaced Retrieval</h2>
+        <p className="text-slate-500 font-light mt-2 tracking-wide text-sm">Visualizing the recordReview API</p>
+      </div>
 
-        {/* Interactive Flow Visualization */}
-        <div className="mt-12">
-          {/* Data Flow */}
-          <div className="flex items-center justify-center gap-4 mb-12">
-            {/* Input Box */}
-            <div className={`text-center ${flowState === 'api' ? 'flow-active' : ''}`}>
-              <div className="w-24 h-20 rounded-lg border-2 border-slate-300 flex items-center justify-center bg-slate-50">
-                <span className="text-xs font-semibold text-slate-700">recordReview()</span>
-              </div>
-            </div>
+      {/* Interactive Controls */}
+      <div className="absolute bottom-16 flex gap-6">
+        <button 
+          onClick={() => simulateFlow(true)}
+          disabled={flowState !== 'idle'}
+          className="px-6 py-3 border border-green-300 text-green-700 font-light tracking-wide hover:bg-green-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed rounded-lg"
+        >
+          ✓ Correct Recall
+        </button>
+        <button 
+          onClick={() => simulateFlow(false)}
+          disabled={flowState !== 'idle'}
+          className="px-6 py-3 border border-red-300 text-red-700 font-light tracking-wide hover:bg-red-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed rounded-lg"
+        >
+          ✗ Memory Lapse
+        </button>
+      </div>
 
-            {/* Arrow */}
-            <div className={`text-slate-300 transition-colors ${flowState !== 'idle' ? 'text-blue-400' : ''}`}>→</div>
+      {/* Main Diagram Container */}
+      <div className="relative w-full max-w-6xl flex justify-between items-center px-12 z-10 h-64">
+        
+        {/* Background SVG Connectors */}
+        <svg className="absolute inset-0 w-full h-full -z-10 pointer-events-none" style={{ top: '50%', transform: 'translateY(-50%)' }}>
+          <line x1="15%" y1="50%" x2="50%" y2="50%" stroke="#E2E8F0" strokeWidth="1" />
+          <line x1="50%" y1="50%" x2="85%" y2="50%" stroke="#E2E8F0" strokeWidth="1" />
+        </svg>
 
-            {/* Engine Box */}
-            <div className={`text-center ${flowState === 'engine' ? 'engine-active' : ''}`}>
-              <div className={`w-28 h-20 rounded-lg border-2 flex items-center justify-center transition-all ${
-                flowState === 'engine' 
-                  ? 'border-blue-500 bg-gradient-to-br from-blue-50 to-purple-50' 
-                  : 'border-slate-300 bg-slate-50'
-              }`}>
-                <span className="text-xs font-semibold text-transparent bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text">
-                  scheduler
-                </span>
-              </div>
-            </div>
+        {/* Node 1: Client */}
+        <div className="flex flex-col items-center bg-white p-6 border border-slate-200 w-64 rounded-lg">
+          <Smartphone strokeWidth={1.5} className="w-8 h-8 text-slate-400 mb-4" />
+          <span className="font-light text-slate-900 tracking-wider">Student App</span>
+          <span className="text-xs text-slate-400 mt-2 font-mono">React + Vite</span>
+        </div>
 
-            {/* Arrow */}
-            <div className={`text-slate-300 transition-colors ${flowState === 'engine' ? 'text-purple-400' : ''}`}>→</div>
+        {/* Node 2: API */}
+        <div className="flex flex-col items-center bg-white p-6 border border-slate-200 w-64 rounded-lg">
+          <Activity strokeWidth={1.5} className="w-8 h-8 text-slate-400 mb-4" />
+          <span className="font-light text-slate-900 tracking-wider">recordReview API</span>
+          <span className="text-xs text-slate-400 mt-2 font-mono">Express Routing</span>
+        </div>
 
-            {/* Output Box */}
-            <div className={`text-center ${flowState === 'engine' ? 'flow-active' : ''}`}>
-              <div className="w-28 h-20 rounded-lg border-2 border-slate-300 flex items-center justify-center bg-blue-50">
-                <span className="text-xs font-semibold text-blue-700">next interval</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Recall Probability Display */}
-          <div className="flex justify-center mb-12">
-            <div className="text-center">
-              <p className="text-sm text-slate-500 uppercase tracking-widest mb-2">Recall Probability</p>
-              <div className="w-48 h-2 bg-slate-200 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-gradient-to-r from-blue-600 to-purple-600 transition-all duration-500"
-                  style={{ width: `${recallProb}%` }}
-                />
-              </div>
-              <p className="text-2xl font-light text-slate-900 mt-3">{recallProb}%</p>
-              <p className="text-xs text-slate-500 mt-1">Target: 60–80% desirable difficulty</p>
-            </div>
-          </div>
-
-          {/* Interactive Buttons */}
-          <div className="flex gap-6 justify-center">
-            <button
-              onClick={() => simulateFlow(true)}
-              disabled={flowState !== 'idle'}
-              className="px-8 py-3 rounded-lg bg-green-50 border-2 border-green-300 text-green-700 font-semibold hover:bg-green-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              ✓ Correct
-            </button>
-            <button
-              onClick={() => simulateFlow(false)}
-              disabled={flowState !== 'idle'}
-              className="px-8 py-3 rounded-lg bg-red-50 border-2 border-red-300 text-red-700 font-semibold hover:bg-red-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              ✗ Incorrect
-            </button>
+        {/* Node 3: Engine */}
+        <div className="flex flex-col items-center bg-white p-6 border border-slate-200 w-64 rounded-lg">
+          <Database strokeWidth={1.5} className="w-8 h-8 text-slate-400 mb-4" />
+          <span className="font-light text-slate-900 tracking-wider">Math Engine</span>
+          <span className="text-xs text-slate-400 mt-2 font-mono">Python + Postgres</span>
+          <div className="mt-4 pt-4 border-t border-slate-100 w-full text-center">
+            <span className="text-xs text-slate-400 tracking-wide uppercase">Recall Probability</span>
+            <div className="text-3xl font-light text-transparent bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text mt-1">{recallProb}%</div>
           </div>
         </div>
+
+        {/* Animated Data Packet */}
+        <div
+          className={`absolute top-1/2 -translate-y-1/2 -translate-x-1/2 flex flex-col items-center transition-all duration-800 ease-in-out ${flowState !== 'idle' ? 'packet-moving' : ''}`}
+          style={{ left: getPacketPosition() }}
+        >
+          {/* The visual packet */}
+          <div className={`w-4 h-4 rounded-full shadow-md transition-all ${
+            flowState === 'idle' ? 'bg-slate-300 opacity-0' : 'bg-blue-500 opacity-100'
+          }`} />
+          
+          {/* The JSON Payload */}
+          <div 
+            className={`absolute top-full whitespace-nowrap bg-white border border-slate-200 px-3 py-2 shadow-sm text-xs font-mono text-slate-500 rounded mt-2 transition-opacity duration-300 ${
+              flowState !== 'idle' ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
+            {`{ correct: ${payload.correct}, ms: ${payload.latency} }`}
+          </div>
+        </div>
+
+      </div>
+
+      {/* Status Indicator */}
+      <div className="absolute bottom-8 right-16 text-center">
+        <p className="text-xs text-slate-400 uppercase tracking-widest">
+          {flowState === 'idle' && 'Ready for next simulation'}
+          {flowState === 'api' && 'Processing API call...'}
+          {flowState === 'engine' && 'Computing next interval...'}
+        </p>
       </div>
     </div>
   );
