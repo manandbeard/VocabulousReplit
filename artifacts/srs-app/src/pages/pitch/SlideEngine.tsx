@@ -21,7 +21,7 @@ export default function SlideEngine() {
 
           <div className="text-center">
             <div className="w-24 h-20 rounded-lg border-2 border-slate-300 flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50">
-              <span className="text-xs font-semibold text-transparent bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text">recordReview</span>
+              <span className="font-semibold text-transparent bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-[18px]">recordReview</span>
             </div>
           </div>
 
