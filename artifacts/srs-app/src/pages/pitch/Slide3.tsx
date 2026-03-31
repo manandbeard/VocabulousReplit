@@ -34,7 +34,7 @@ export default function Slide3() {
         }
       `}</style>
       <div className="max-w-5xl animate-in fade-in slide-in-from-bottom-4 duration-700">
-        <h2 className="text-6xl font-light text-slate-900 mb-16 tracking-wide ml-[-5px]">This is what Vocabulous does:    Make Learning Stick.</h2>
+        <h2 className="text-6xl font-light text-slate-900 mb-16 tracking-wide pl-[-2px] pr-[-2px] ml-[-12px] mr-[62px]">This is what Vocabulous does:    Make Learning Stick.</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           {pillars.map((pillar, i) => {
