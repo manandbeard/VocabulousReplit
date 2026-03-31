@@ -54,7 +54,7 @@ export default function Slide3() {
                   size={32}
                   strokeWidth={1.5}
                 />
-                <h3 className={`text-xl font-semibold text-slate-900 mb-3 transition-all duration-300 ${isHovered ? "shimmer-text scale-110" : "scale-100"}`}>
+                <h3 className="font-semibold text-slate-900 mb-3 transition-all duration-300 shimmer-text scale-110 text-[25px]">
                   {pillar.title}
                 </h3>
                 <p className="text-sm font-light text-slate-600 leading-relaxed">
