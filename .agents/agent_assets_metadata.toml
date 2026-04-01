@@ -72,3 +72,39 @@ id = "Oh7V8naQU0BYcgyo165ZP"
 uri = "file://artifacts/srs-app/public/images/card-bg-collaborative-learning.png"
 type = "image"
 title = "Collaborative student learning scene"
+
+[[generated]]
+id = "DLIGGdAYa4VFPqqV9xL_u"
+uri = "file://artifacts/srs-app/public/images/card-bg-student-focused.png"
+type = "image"
+title = "Single focused student at desk"
+
+[[generated]]
+id = "5IAP8M-F5jUbH150yYT8V"
+uri = "file://artifacts/srs-app/public/images/card-bg-peer-study.png"
+type = "image"
+title = "Two students peer studying"
+
+[[generated]]
+id = "sU92zZ2Im0_dcT3Xi5d_o"
+uri = "file://artifacts/srs-app/public/images/card-bg-active-learning.png"
+type = "image"
+title = "Student writing on whiteboard"
+
+[[generated]]
+id = "RL8c-vDoN9-ZehfTQ_Gwy"
+uri = "file://artifacts/srs-app/public/images/card-bg-study-desk.png"
+type = "image"
+title = "Overhead study desk arrangement"
+
+[[generated]]
+id = "BZDMgl-f-FsM3zXGPQYXX"
+uri = "file://artifacts/srs-app/public/images/card-bg-group-session.png"
+type = "image"
+title = "Three students group study session"
+
+[[generated]]
+id = "yKHAGFA_3UOvtkoi8Ykdv"
+uri = "file://artifacts/srs-app/public/images/card-bg-deep-reading.png"
+type = "image"
+title = "Student deep in reading"
