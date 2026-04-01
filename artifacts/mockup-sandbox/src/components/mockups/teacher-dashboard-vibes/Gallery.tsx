@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { ChevronUp, ChevronDown } from "lucide-react";
 import WarmApproachable from "./WarmApproachable";
 import FormalProfessional from "./FormalProfessional";
 import PlayfulVibrant from "./PlayfulVibrant";
@@ -33,6 +34,7 @@ const allVariations = variations.flatMap(cat => cat.items);
 
 export default function Gallery() {
   const [selected, setSelected] = useState(0);
+  const [menuOpen, setMenuOpen] = useState(true);
   const SelectedComponent = allVariations[selected].component;
 
   return (
@@ -40,38 +42,52 @@ export default function Gallery() {
       {/* Navigation */}
       <div className="fixed top-0 left-0 right-0 bg-white shadow-sm z-50">
         <div className="max-w-7xl mx-auto px-6 py-4">
-          <h1 className="text-2xl font-bold text-slate-900 mb-4">Teacher Dashboard Variations</h1>
-          <div className="space-y-2">
-            {variations.map((category, catIdx) => (
-              <div key={catIdx}>
-                <div className="text-xs font-bold uppercase tracking-widest text-slate-600 mb-2">{category.category}</div>
-                <div className="flex overflow-x-auto gap-2 pb-2">
-                  {category.items.map((v, itemIdx) => {
-                    const globalIdx = variations.slice(0, catIdx).flatMap(c => c.items).length + itemIdx;
-                    return (
-                      <button
-                        key={globalIdx}
-                        onClick={() => setSelected(globalIdx)}
-                        className={`px-4 py-2 rounded-lg whitespace-nowrap text-sm font-medium transition-all ${
-                          globalIdx === selected
-                            ? "bg-blue-600 text-white shadow-sm"
-                            : "bg-slate-200 text-slate-900 hover:bg-slate-300"
-                        }`}
-                      >
-                        {v.name}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
+          <div className="flex items-center justify-between mb-4">
+            <h1 className="text-2xl font-bold text-slate-900">Teacher Dashboard Variations</h1>
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="p-2 hover:bg-slate-100 rounded-lg transition-colors text-slate-600 hover:text-slate-900"
+              aria-label={menuOpen ? "Hide menu" : "Show menu"}
+            >
+              {menuOpen ? <ChevronUp className="w-6 h-6" /> : <ChevronDown className="w-6 h-6" />}
+            </button>
           </div>
-          <p className="text-sm text-slate-600 mt-3">{allVariations[selected].desc}</p>
+
+          {menuOpen && (
+            <>
+              <div className="space-y-2">
+                {variations.map((category, catIdx) => (
+                  <div key={catIdx}>
+                    <div className="text-xs font-bold uppercase tracking-widest text-slate-600 mb-2">{category.category}</div>
+                    <div className="flex overflow-x-auto gap-2 pb-2">
+                      {category.items.map((v, itemIdx) => {
+                        const globalIdx = variations.slice(0, catIdx).flatMap(c => c.items).length + itemIdx;
+                        return (
+                          <button
+                            key={globalIdx}
+                            onClick={() => setSelected(globalIdx)}
+                            className={`px-4 py-2 rounded-lg whitespace-nowrap text-sm font-medium transition-all ${
+                              globalIdx === selected
+                                ? "bg-blue-600 text-white shadow-sm"
+                                : "bg-slate-200 text-slate-900 hover:bg-slate-300"
+                            }`}
+                          >
+                            {v.name}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <p className="text-sm text-slate-600 mt-3">{allVariations[selected].desc}</p>
+            </>
+          )}
         </div>
       </div>
 
       {/* Viewport */}
-      <div className="pt-40 pb-8 px-4">
+      <div className={`${menuOpen ? "pt-40" : "pt-20"} pb-8 px-4 transition-all`}>
         <div className="max-w-full mx-auto border border-slate-300 rounded-lg overflow-hidden shadow-lg bg-white">
           <SelectedComponent />
         </div>
