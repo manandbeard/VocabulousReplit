@@ -1,12 +1,14 @@
 import { useLocation } from "wouter";
 import { ArrowRight, Brain, Zap, Target, BarChart3, Clock, Users, Activity } from "lucide-react";
+import { SynapticWeb } from "@/components/ui/synaptic-web";
 
 export default function Landing() {
   const [, navigate] = useLocation();
 
   return (
-    <div className="min-h-screen bg-slate-50 font-['Inter'] text-slate-900 p-4 md:p-8 flex items-center justify-center">
-      <div className="max-w-6xl w-full mx-auto">
+    <div className="min-h-screen font-['Inter'] text-slate-900 p-4 md:p-8 flex items-center justify-center relative">
+      <SynapticWeb />
+      <div className="max-w-6xl w-full mx-auto relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[minmax(140px,auto)]">
 
           {/* Brand & Hero — spans all 4 columns */}
