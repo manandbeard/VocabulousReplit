@@ -9,6 +9,17 @@ export function TopNav() {
   const [infoOpen, setInfoOpen] = useState(false);
   const infoRef = useRef<HTMLDivElement>(null);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (infoRef.current && !infoRef.current.contains(event.target as Node)) {
+        setInfoOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   if (role !== "teacher") return null;
 
   const navItems = [
@@ -21,17 +32,6 @@ export function TopNav() {
     { label: "Building in Public", href: "/build", icon: Rocket },
     { label: "Pitch Deck", href: "/pitch", icon: Presentation },
   ];
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (infoRef.current && !infoRef.current.contains(event.target as Node)) {
-        setInfoOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   const handleLogout = () => {
     setRole(null);
