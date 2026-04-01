@@ -1,5 +1,5 @@
 import { useLocation } from "wouter";
-import { BookOpen, BarChart3, Settings, LogOut, Home, Rocket, Presentation, ChevronDown } from "lucide-react";
+import { BookOpen, BarChart3, Settings, LogOut, Home, Rocket, Presentation, ChevronDown, Info } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import { useRole } from "@/hooks/use-role";
 
@@ -77,6 +77,7 @@ export function TopNav() {
                 onClick={() => setInfoOpen(!infoOpen)}
                 className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors"
               >
+                <Info className="w-4 h-4" />
                 Info
                 <ChevronDown className={`w-4 h-4 transition-transform ${infoOpen ? "rotate-180" : ""}`} />
               </button>
