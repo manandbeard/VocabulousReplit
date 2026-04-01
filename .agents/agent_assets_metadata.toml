@@ -48,3 +48,21 @@ id = "QWPGSi9GHvIqruFQ_WK9b"
 uri = "file://artifacts/srs-app/public/images/card-bg-celebrate-pearl.png"
 type = "image"
 title = "Pearl rose gold luxury"
+
+[[generated]]
+id = "0F3LTKzguH8ffq8mtUoDn"
+uri = "file://artifacts/srs-app/public/images/card-bg-student-reading.png"
+type = "image"
+title = "Line art student reading book"
+
+[[generated]]
+id = "spyHUElSTeFkozZjoKd_D"
+uri = "file://artifacts/srs-app/public/images/card-bg-spiral-learning.png"
+type = "image"
+title = "Spiral continuous learning icon"
+
+[[generated]]
+id = "1leoRiJUQOXGj15yYOUbD"
+uri = "file://artifacts/srs-app/public/images/card-bg-mind-learning.png"
+type = "image"
+title = "Mind learning connection icon"
