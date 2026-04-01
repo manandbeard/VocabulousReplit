@@ -38,12 +38,7 @@ const animations = {
     enter: { filter: "blur(8px)", opacity: 0 },
     transition: { duration: 0.3 },
   },
-  "Bounce Flip": {
-    front: { rotateX: 0, opacity: 1 },
-    exit: { rotateX: -90, opacity: 0 },
-    enter: { rotateX: 90, opacity: 0 },
-    transition: { duration: 0.6, ease: "easeInOut", type: "spring", bounce: 0.4 },
-  },
+  "Bounce Flip": null,
   "Slide & Rotate": {
     front: { x: 0, rotateZ: 0, opacity: 1 },
     exit: { x: -30, rotateZ: -15, opacity: 0 },
@@ -52,11 +47,49 @@ const animations = {
   },
 };
 
+function BounceFlipCard({ isFlipped, onFlip }: { isFlipped: boolean; onFlip: () => void }) {
+  return (
+    <div
+      className="relative h-96 mb-6 cursor-pointer"
+      style={{ perspective: "1200px" }}
+      onClick={onFlip}
+    >
+      <motion.div
+        animate={{ rotateY: isFlipped ? 180 : 0 }}
+        transition={{ type: "spring", stiffness: 260, damping: 18, mass: 1 }}
+        style={{ transformStyle: "preserve-3d", width: "100%", height: "100%", position: "relative" }}
+      >
+        {/* Front face */}
+        <div
+          className="absolute inset-0 w-full h-full rounded-3xl bg-white border-2 border-slate-200 shadow-lg flex flex-col items-center justify-center p-8 text-center"
+          style={{ backfaceVisibility: "hidden" }}
+        >
+          <p className="text-sm font-bold uppercase tracking-widest text-slate-400 mb-4">Front Side</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 leading-tight">
+            What year did Germany invade Poland?
+          </h2>
+          <p className="text-slate-500 mt-6 text-sm">Click to reveal answer</p>
+        </div>
+        {/* Back face */}
+        <div
+          className="absolute inset-0 w-full h-full rounded-3xl bg-blue-50 border-2 border-blue-200 shadow-lg flex flex-col items-center justify-center p-8 text-center"
+          style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
+        >
+          <p className="text-sm font-bold uppercase tracking-widest text-blue-400 mb-4">Back Side</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-blue-600 leading-tight">1939</h2>
+          <p className="text-slate-500 mt-6 text-sm">Click to see question</p>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
 export default function CardFlipVariations() {
   const [selectedAnimation, setSelectedAnimation] = useState<keyof typeof animations>("3D Flip X");
   const [isFlipped, setIsFlipped] = useState(false);
 
   const config = animations[selectedAnimation];
+  const isBounce = selectedAnimation === "Bounce Flip";
 
   return (
     <div className="min-h-screen bg-slate-50 p-8">
@@ -94,14 +127,17 @@ export default function CardFlipVariations() {
 
         {/* Card Preview */}
         <div className="mb-8">
+          {isBounce ? (
+            <BounceFlipCard isFlipped={isFlipped} onFlip={() => setIsFlipped(!isFlipped)} />
+          ) : (
           <div className="relative h-96 mb-6">
             <AnimatePresence mode="wait">
               <motion.div
                 key={isFlipped ? "back" : "front"}
-                initial={!isFlipped ? config.enter : config.exit}
-                animate={config.front}
-                exit={isFlipped ? config.exit : config.enter}
-                transition={config.transition}
+                initial={!isFlipped ? config!.enter : config!.exit}
+                animate={config!.front}
+                exit={isFlipped ? config!.exit : config!.enter}
+                transition={config!.transition}
                 className="absolute inset-0 w-full h-full"
               >
                 <div className="w-full h-full rounded-3xl bg-white border-2 border-slate-200 shadow-lg flex flex-col items-center justify-center p-8 text-center cursor-pointer"
@@ -131,6 +167,7 @@ export default function CardFlipVariations() {
               </motion.div>
             </AnimatePresence>
           </div>
+          )}
 
           {/* Buttons */}
           <div className="flex gap-4">
@@ -157,10 +194,12 @@ export default function CardFlipVariations() {
               <span className="text-slate-900 font-bold">Style:</span> {selectedAnimation}
             </div>
             <div>
-              <span className="text-slate-900 font-bold">Duration:</span> {config.transition.duration}s
+              <span className="text-slate-900 font-bold">Duration:</span>{" "}
+              {isBounce ? "spring" : `${config!.transition.duration}s`}
             </div>
             <div>
-              <span className="text-slate-900 font-bold">Easing:</span> {(config.transition.ease as string) || "default"}
+              <span className="text-slate-900 font-bold">Easing:</span>{" "}
+              {isBounce ? "spring (stiffness 260, damping 18)" : ((config!.transition.ease as string) || "default")}
             </div>
           </div>
 
