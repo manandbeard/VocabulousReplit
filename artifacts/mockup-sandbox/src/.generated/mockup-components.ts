@@ -6,6 +6,8 @@ export const modules: ModuleMap = {
   "./components/mockups/landing-layouts/BentoGrid.tsx": () => import("../components/mockups/landing-layouts/BentoGrid.tsx"),
   "./components/mockups/landing-layouts/CinematicScreen.tsx": () => import("../components/mockups/landing-layouts/CinematicScreen.tsx"),
   "./components/mockups/landing-layouts/SplitScreenDock.tsx": () => import("../components/mockups/landing-layouts/SplitScreenDock.tsx"),
+  "./components/mockups/synaptic-web/SynapticWeb.tsx": () => import("../components/mockups/synaptic-web/SynapticWeb.tsx"),
+  "./components/mockups/synaptic-web/SynapticWebDemo.tsx": () => import("../components/mockups/synaptic-web/SynapticWebDemo.tsx"),
   "./components/mockups/teacher-dashboard-vibes/AccessibilityFirst.tsx": () => import("../components/mockups/teacher-dashboard-vibes/AccessibilityFirst.tsx"),
   "./components/mockups/teacher-dashboard-vibes/ClarityFirst.tsx": () => import("../components/mockups/teacher-dashboard-vibes/ClarityFirst.tsx"),
   "./components/mockups/teacher-dashboard-vibes/CommandCenter.tsx": () => import("../components/mockups/teacher-dashboard-vibes/CommandCenter.tsx"),
@@ -24,7 +26,5 @@ export const modules: ModuleMap = {
   "./components/mockups/vocabulous-hero/NeoBrutalistHero.tsx": () => import("../components/mockups/vocabulous-hero/NeoBrutalistHero.tsx"),
   "./components/mockups/vocabulous-hero/NeoRetroHero.tsx": () => import("../components/mockups/vocabulous-hero/NeoRetroHero.tsx"),
   "./components/mockups/vocabulous-hero/PitchDeckBanner.tsx": () => import("../components/mockups/vocabulous-hero/PitchDeckBanner.tsx"),
-  "./components/mockups/synaptic-web/SynapticWeb.tsx": () => import("../components/mockups/synaptic-web/SynapticWeb.tsx"),
-  "./components/mockups/synaptic-web/SynapticWebDemo.tsx": () => import("../components/mockups/synaptic-web/SynapticWebDemo.tsx"),
   "./components/mockups/vocabulous-landing/NeoBrutalistLogin.tsx": () => import("../components/mockups/vocabulous-landing/NeoBrutalistLogin.tsx")
 };

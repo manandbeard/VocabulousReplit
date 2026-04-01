@@ -1,5 +1,5 @@
 import { useLocation } from "wouter";
-import { BookOpen, BarChart3, Settings, LogOut, Home, Rocket, Presentation, ChevronDown, Info } from "lucide-react";
+import { BookOpen, BarChart3, Settings, LogOut, Home, Rocket, Presentation, ChevronDown, Info, BrainCircuit, TrendingUp } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import { useRole } from "@/hooks/use-role";
 
@@ -20,13 +20,19 @@ export function TopNav() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  if (role !== "teacher") return null;
+  if (!role) return null;
 
-  const navItems = [
-    { label: "Dashboard", href: "/teacher", icon: Home },
-    { label: "Classes", href: "/teacher/classes", icon: BookOpen },
-    { label: "Analytics", href: "/teacher/analytics", icon: BarChart3 },
-  ];
+  const navItems = role === "teacher" 
+    ? [
+        { label: "Dashboard", href: "/teacher", icon: Home },
+        { label: "Classes", href: "/teacher/classes", icon: BookOpen },
+        { label: "Analytics", href: "/teacher/analytics", icon: BarChart3 },
+      ]
+    : [
+        { label: "Dashboard", href: "/student", icon: Home },
+        { label: "Study", href: "/student/study", icon: BrainCircuit },
+        { label: "Progress", href: "/student/progress", icon: TrendingUp },
+      ];
 
   const infoItems = [
     { label: "Building in Public", href: "/build", icon: Rocket },
@@ -54,7 +60,8 @@ export function TopNav() {
           <div className="flex items-center gap-1">
             {navItems.map((item) => {
               const Icon = item.icon;
-              const isActive = location === item.href || (item.href !== "/teacher" && location.startsWith(item.href));
+              const baseHref = role === "teacher" ? "/teacher" : "/student";
+              const isActive = location === item.href || (item.href !== baseHref && location.startsWith(item.href));
               return (
                 <button
                   key={item.href}
