@@ -79,6 +79,9 @@ export default function TeacherDashboard() {
   const engMax = Math.max(...engagementBars, 1);
   const todayPct = Math.round((engagementBars[6] / analytics.totalStudents) * 100);
 
+  const heroBgImage = getRotatingImage(userId || 1);
+  const milestoneBgImage = getRotatingImage((userId || 1) + 3);
+
   const topClass = analytics.classBreakdown.reduce(
     (best, c) => (c.totalReviews > (best?.totalReviews || 0) ? c : best),
     analytics.classBreakdown[0]
@@ -122,7 +125,7 @@ export default function TeacherDashboard() {
           {/* Dark hero card with rotating bg image */}
           <div
             className="col-span-3 text-white rounded-3xl p-6 border border-slate-800 shadow-[0_4px_24px_-4px_rgba(15,23,42,0.40)] hover:shadow-[0_8px_40px_-4px_rgba(15,23,42,0.55)] hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between relative overflow-hidden"
-            style={{ backgroundColor: "#0f172a", backgroundImage: `url('${getRotatingImage(userId || 1)}')`, backgroundSize: "cover", backgroundPosition: "center" }}
+            style={{ backgroundColor: "#0f172a", backgroundImage: `url('${heroBgImage}')`, backgroundSize: "cover", backgroundPosition: "center" }}
           >
             <div className="absolute inset-0 bg-slate-900/85" />
             <Activity className="absolute right-[-8%] bottom-[-12%] w-32 h-32 text-slate-700 opacity-40 z-10" />
@@ -251,7 +254,7 @@ export default function TeacherDashboard() {
           {/* Class Milestone — real data from DB */}
           <div
             className="col-span-4 rounded-3xl border border-violet-100 shadow-[0_4px_24px_-4px_rgba(139,92,246,0.18)] hover:shadow-[0_8px_32px_-4px_rgba(139,92,246,0.28)] hover:-translate-y-0.5 transition-all duration-200 p-6 relative overflow-hidden"
-            style={{ backgroundColor: "#f5f3ff", backgroundImage: `url('${getRotatingImage((userId || 1) + 3)}')`, backgroundSize: "cover", backgroundPosition: "center" }}
+            style={{ backgroundColor: "#f5f3ff", backgroundImage: `url('${milestoneBgImage}')`, backgroundSize: "cover", backgroundPosition: "center" }}
           >
             <div className="absolute inset-0 bg-violet-50/80" />
             <Award className="absolute right-[-5%] bottom-[-10%] w-28 h-28 text-violet-200 opacity-60 z-10" />
