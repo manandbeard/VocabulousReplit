@@ -1,6 +1,6 @@
 kind = "web"
 previewPath = "/"
-title = "MetaSRS Learning Platform"
+title = "Vocabulous"
 version = "1.0.0"
 id = "artifacts/srs-app"
 router = "path"
