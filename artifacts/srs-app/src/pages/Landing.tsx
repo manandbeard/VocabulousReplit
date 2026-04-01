@@ -7,9 +7,14 @@ export default function Landing() {
   const [, navigate] = useLocation();
   const { setRole } = useRole();
 
-  const handleStartLearning = () => {
+  const handleLoginTeacher = () => {
     setRole("teacher");
     navigate("/teacher");
+  };
+
+  const handleLoginStudent = () => {
+    setRole("student");
+    navigate("/student");
   };
 
   return (
@@ -99,12 +104,19 @@ export default function Landing() {
               <Target className="w-8 h-8 text-slate-400" />
             </div>
             <h3 className="font-bold text-xl tracking-tight">Ready to start?</h3>
-            <p className="text-sm text-slate-500 mb-2">Join students and teachers using spaced retrieval daily.</p>
+            <p className="text-sm text-slate-500 mb-2">Join the learning platform today.</p>
             <button
-              onClick={handleStartLearning}
-              className="w-full py-4 px-6 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-medium transition-colors flex items-center justify-center gap-2 group"
+              onClick={handleLoginTeacher}
+              className="w-full py-3 px-6 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-colors flex items-center justify-center gap-2 group"
             >
-              Start Learning
+              Log in as a Teacher
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </button>
+            <button
+              onClick={handleLoginStudent}
+              className="w-full py-3 px-6 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-medium transition-colors flex items-center justify-center gap-2 group"
+            >
+              Log in as a Student
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
             <button
