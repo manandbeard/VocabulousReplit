@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useLocation } from "wouter";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { useRole } from "@/hooks/use-role";
-import { Mail, Lock, Bell, Target, Shield, LogOut, Camera } from "lucide-react";
+import { Mail, Lock, Bell, Target, Shield, LogOut, Camera, RotateCcw, AlertCircle, X } from "lucide-react";
 
 type SettingsTab = "account" | "security" | "notifications" | "preferences";
 
@@ -15,6 +15,14 @@ export default function Settings() {
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [pushNotifications, setPushNotifications] = useState(false);
   const [twoFactor, setTwoFactor] = useState(true);
+  const [showResetModal, setShowResetModal] = useState(false);
+
+  const handleResetStudyProgress = () => {
+    // Reset the study progress for the day
+    localStorage.removeItem("dailyStudyProgress");
+    localStorage.removeItem("cardsStudiedToday");
+    setShowResetModal(false);
+  };
 
   const tabs = [
     { id: "account" as const, label: "Account", icon: Mail },
@@ -302,8 +310,63 @@ export default function Settings() {
               </div>
 
               <div className="pt-6 border-t border-slate-200">
+                <h4 className="font-bold text-slate-900 mb-4 flex items-center gap-2">
+                  <RotateCcw className="w-4 h-4" />
+                  Reset Study Progress
+                </h4>
+                <p className="text-sm text-slate-600 mb-4">Clear your study progress for today and start over with all cards.</p>
+                <button
+                  onClick={() => setShowResetModal(true)}
+                  className="px-4 py-2 rounded-lg border-2 border-red-300 text-red-600 hover:bg-red-50 font-medium transition-colors"
+                >
+                  Reset for Today
+                </button>
+              </div>
+
+              <div className="pt-6 border-t border-slate-200">
                 <button className="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-medium transition-colors">
                   Save Preferences
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Reset Confirmation Modal */}
+        {showResetModal && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-3xl shadow-xl p-8 max-w-md w-full mx-4">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                    <AlertCircle className="w-6 h-6 text-red-600" />
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900">Reset Study Progress?</h3>
+                </div>
+                <button
+                  onClick={() => setShowResetModal(false)}
+                  className="text-slate-400 hover:text-slate-600 transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <p className="text-slate-600 mb-6">
+                This will clear your study progress for today, allowing you to review all cards again. Are you sure you want to continue?
+              </p>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowResetModal(false)}
+                  className="flex-1 px-4 py-3 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-900 font-medium transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleResetStudyProgress}
+                  className="flex-1 px-4 py-3 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium transition-colors"
+                >
+                  Reset Progress
                 </button>
               </div>
             </div>
