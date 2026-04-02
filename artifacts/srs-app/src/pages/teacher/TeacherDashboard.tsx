@@ -213,9 +213,9 @@ export default function TeacherDashboard() {
             </div>
           </ShadowCard>
 
-          {/* Needs Attention — 4 cols */}
+          {/* Needs Attention — 9 cols */}
           {atRiskClasses.length > 0 ? (
-            <div className="col-span-4 bg-red-50 rounded-3xl border border-red-100 shadow-[0_4px_24px_-4px_rgba(220,38,38,0.14)] hover:shadow-[0_8px_32px_-4px_rgba(220,38,38,0.22)] hover:-translate-y-0.5 transition-all duration-200 p-6 min-h-60 flex flex-col justify-between">
+            <div className="col-span-9 bg-red-50 rounded-3xl border border-red-100 shadow-[0_4px_24px_-4px_rgba(220,38,38,0.14)] hover:shadow-[0_8px_32px_-4px_rgba(220,38,38,0.22)] hover:-translate-y-0.5 transition-all duration-200 p-6 min-h-60 flex flex-col justify-between">
               <p className="text-xs font-semibold uppercase tracking-widest text-red-500 mb-4 flex items-center gap-1.5">
                 <AlertTriangle className="w-3.5 h-3.5" /> Needs Attention
               </p>
@@ -236,7 +236,7 @@ export default function TeacherDashboard() {
               </div>
             </div>
           ) : (
-            <ShadowCard className="col-span-4 p-6 flex items-center gap-4">
+            <ShadowCard className="col-span-9 p-6 flex items-center gap-4">
               <div className="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center">
                 <Users className="w-6 h-6 text-emerald-600" />
               </div>
@@ -246,12 +246,13 @@ export default function TeacherDashboard() {
               </div>
             </ShadowCard>
           )}
+        </div>
 
-          {/* Class Milestone — real data from DB */}
-          <div
-            className="col-span-5 min-h-60 rounded-3xl border border-violet-100 shadow-[0_4px_24px_-4px_rgba(139,92,246,0.18)] hover:shadow-[0_8px_32px_-4px_rgba(139,92,246,0.28)] hover:-translate-y-0.5 transition-all duration-200 p-6 relative overflow-hidden flex flex-col justify-between"
-            style={{ backgroundColor: "#f5f3ff", backgroundImage: `url('${getSceneImage((userId || 0) + 2)}')`, backgroundSize: "cover", backgroundPosition: "center" }}
-          >
+        {/* Row 3 — Class Milestone full width */}
+        <div
+          className="col-span-12 min-h-60 rounded-3xl border border-violet-100 shadow-[0_4px_24px_-4px_rgba(139,92,246,0.18)] hover:shadow-[0_8px_32px_-4px_rgba(139,92,246,0.28)] hover:-translate-y-0.5 transition-all duration-200 p-6 relative overflow-hidden flex flex-col justify-between"
+          style={{ backgroundColor: "#f5f3ff", backgroundImage: `url('${getSceneImage((userId || 0) + 2)}')`, backgroundSize: "cover", backgroundPosition: "center" }}
+        >
             <div className="absolute inset-0 bg-violet-50/80" />
             <Award className="absolute right-[-5%] bottom-[-10%] w-28 h-28 text-violet-200 opacity-60 z-10" />
             <div className="relative z-20">
