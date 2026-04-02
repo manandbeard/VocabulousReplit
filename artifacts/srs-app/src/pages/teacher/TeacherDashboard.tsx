@@ -284,10 +284,9 @@ export default function TeacherDashboard() {
                 <p className="text-sm text-slate-500">No milestones yet</p>
               )}
             </div>
-          </div>
         </div>
 
-        {/* Row 3 — Class Overview */}
+        {/* Row 4 — Class Overview */}
         <div>
           <p className="text-xs font-semibold uppercase tracking-widest text-slate-500 mb-4">Class Overview</p>
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
