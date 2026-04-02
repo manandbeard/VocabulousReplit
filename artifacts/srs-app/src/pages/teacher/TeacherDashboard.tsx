@@ -213,9 +213,9 @@ export default function TeacherDashboard() {
             </div>
           </ShadowCard>
 
-          {/* Needs Attention — 5 cols */}
+          {/* Needs Attention — 4 cols */}
           {atRiskClasses.length > 0 ? (
-            <div className="col-span-5 bg-red-50 rounded-3xl border border-red-100 shadow-[0_4px_24px_-4px_rgba(220,38,38,0.14)] hover:shadow-[0_8px_32px_-4px_rgba(220,38,38,0.22)] hover:-translate-y-0.5 transition-all duration-200 p-6">
+            <div className="col-span-4 bg-red-50 rounded-3xl border border-red-100 shadow-[0_4px_24px_-4px_rgba(220,38,38,0.14)] hover:shadow-[0_8px_32px_-4px_rgba(220,38,38,0.22)] hover:-translate-y-0.5 transition-all duration-200 p-6">
               <p className="text-xs font-semibold uppercase tracking-widest text-red-500 mb-4 flex items-center gap-1.5">
                 <AlertTriangle className="w-3.5 h-3.5" /> Needs Attention
               </p>
@@ -236,7 +236,7 @@ export default function TeacherDashboard() {
               </div>
             </div>
           ) : (
-            <ShadowCard className="col-span-5 p-6 flex items-center gap-4">
+            <ShadowCard className="col-span-4 p-6 flex items-center gap-4">
               <div className="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center">
                 <Users className="w-6 h-6 text-emerald-600" />
               </div>
@@ -249,7 +249,7 @@ export default function TeacherDashboard() {
 
           {/* Class Milestone — real data from DB */}
           <div
-            className="col-span-4 rounded-3xl border border-violet-100 shadow-[0_4px_24px_-4px_rgba(139,92,246,0.18)] hover:shadow-[0_8px_32px_-4px_rgba(139,92,246,0.28)] hover:-translate-y-0.5 transition-all duration-200 p-6 relative overflow-hidden"
+            className="col-span-5 rounded-3xl border border-violet-100 shadow-[0_4px_24px_-4px_rgba(139,92,246,0.18)] hover:shadow-[0_8px_32px_-4px_rgba(139,92,246,0.28)] hover:-translate-y-0.5 transition-all duration-200 p-6 relative overflow-hidden"
             style={{ backgroundColor: "#f5f3ff", backgroundImage: `url('${getSceneImage((userId || 0) + 2)}')`, backgroundSize: "cover", backgroundPosition: "center" }}
           >
             <div className="absolute inset-0 bg-violet-50/80" />
