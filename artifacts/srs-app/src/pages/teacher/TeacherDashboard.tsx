@@ -252,35 +252,35 @@ export default function TeacherDashboard() {
             className="col-span-4 rounded-3xl border border-violet-100 shadow-[0_4px_24px_-4px_rgba(139,92,246,0.18)] hover:shadow-[0_8px_32px_-4px_rgba(139,92,246,0.28)] hover:-translate-y-0.5 transition-all duration-200 p-6 relative overflow-hidden"
             style={{ backgroundColor: "#f5f3ff", backgroundImage: `url('${getSceneImage((userId || 0) + 2)}')`, backgroundSize: "cover", backgroundPosition: "center" }}
           >
-            <div className="absolute inset-0 bg-violet-50/80" />
-            <Award className="absolute right-[-5%] bottom-[-10%] w-28 h-28 text-violet-200 opacity-60 z-10" />
+            <div className="absolute inset-0 bg-gradient-to-br from-white/95 via-violet-50/92 to-violet-100/90" />
+            <Award className="absolute right-[-5%] bottom-[-10%] w-28 h-28 text-violet-200 opacity-30 z-10" />
             <div className="relative z-20">
-              <p className="text-xs font-semibold uppercase tracking-widest text-violet-500 mb-3 flex items-center gap-1.5">
+              <p className="text-xs font-semibold uppercase tracking-widest text-violet-600 mb-3 flex items-center gap-1.5">
                 <Award className="w-3.5 h-3.5" /> Class Milestone
               </p>
               {milestones && milestones.length > 0 ? (
                 <>
-                  <p className="text-2xl mb-1">{milestones[0].achievement.icon}</p>
-                  <p className="text-base font-black text-slate-900 leading-snug">
+                  <p className="text-3xl mb-2">{milestones[0].achievement.icon}</p>
+                  <p className="text-base font-black text-slate-900 leading-tight">
                     {milestones[0].achievement.name}
                   </p>
-                  <p className="text-sm text-slate-500 mt-1">{milestones[0].className}</p>
-                  <p className="text-xs text-violet-500 font-semibold mt-1.5">
+                  <p className="text-xs text-slate-600 mt-2">{milestones[0].className}</p>
+                  <p className="text-xs text-violet-500 font-semibold mt-2">
                     Earned {new Date(milestones[0].earnedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                   </p>
                 </>
               ) : topClass ? (
                 <>
-                  <p className="text-base font-black text-slate-900 leading-snug">
+                  <p className="text-base font-black text-slate-900 leading-tight">
                     {topClass.className}
                   </p>
-                  <p className="text-2xl font-black text-slate-900 mt-1">
-                    {topClass.totalReviews.toLocaleString()} <span className="text-sm font-semibold text-slate-500">reviews</span>
+                  <p className="text-2xl font-black text-slate-900 mt-2">
+                    {topClass.totalReviews.toLocaleString()} <span className="text-xs font-semibold text-slate-600">reviews</span>
                   </p>
-                  <p className="text-xs text-slate-400 mt-1">Milestone pending 🏅</p>
+                  <p className="text-xs text-slate-600 mt-2">Milestone pending 🏅</p>
                 </>
               ) : (
-                <p className="text-sm text-slate-500">No milestones yet</p>
+                <p className="text-xs text-slate-600">No milestones yet</p>
               )}
             </div>
           </div>
