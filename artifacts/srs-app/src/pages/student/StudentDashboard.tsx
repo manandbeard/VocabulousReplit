@@ -95,11 +95,11 @@ export default function StudentDashboard() {
         </div>
 
         {/* Row 1 — Hero bento */}
-        <div className="grid grid-cols-12 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
 
           {/* Dark streak card with faded bg image */}
           <div
-            className="col-span-3 text-white rounded-3xl p-6 border border-slate-800 shadow-[0_4px_24px_-4px_rgba(15,23,42,0.40)] hover:shadow-[0_8px_40px_-4px_rgba(15,23,42,0.55)] hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between relative overflow-hidden"
+            className="md:col-span-3 text-white rounded-3xl p-6 border border-slate-800 shadow-[0_4px_24px_-4px_rgba(15,23,42,0.40)] hover:shadow-[0_8px_40px_-4px_rgba(15,23,42,0.55)] hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between relative overflow-hidden"
             style={{ backgroundColor: "#0f172a", backgroundImage: `url('${getSceneImage(userId || 0)}')`, backgroundSize: "cover", backgroundPosition: "center" }}
           >
             <div className="absolute inset-0 bg-slate-900/85" />
@@ -119,7 +119,7 @@ export default function StudentDashboard() {
           </div>
 
           {/* Today's Goal — 5 cols */}
-          <ShadowCard className="col-span-5 p-6 flex flex-col justify-between">
+          <ShadowCard className="md:col-span-5 p-6 flex flex-col justify-between">
             <div className="flex items-center justify-between mb-4">
               <p className="text-xs font-semibold uppercase tracking-widest text-slate-500 flex items-center gap-1.5">
                 <BarChart2 className="w-3.5 h-3.5" /> Today's Goal
@@ -155,9 +155,9 @@ export default function StudentDashboard() {
           </ShadowCard>
 
           {/* Retention + Mastered stacked */}
-          <div className="col-span-4 grid grid-rows-2 gap-4">
-            <div className="bg-blue-50 rounded-3xl p-5 border border-blue-100 shadow-[0_4px_24px_-4px_rgba(37,99,235,0.14)] hover:shadow-[0_8px_32px_-4px_rgba(37,99,235,0.22)] hover:-translate-y-0.5 transition-all duration-200 flex items-center gap-4">
-              <div className="w-11 h-11 rounded-2xl bg-white flex items-center justify-center shadow-sm shrink-0">
+          <div className="md:col-span-4 grid grid-rows-2 gap-4">
+            <div className="bg-blue-50 rounded-3xl p-6 border border-blue-100 shadow-[0_4px_24px_-4px_rgba(37,99,235,0.14)] hover:shadow-[0_8px_32px_-4px_rgba(37,99,235,0.22)] hover:-translate-y-0.5 transition-all duration-200 flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center shadow-sm shrink-0">
                 <Target className="w-5 h-5 text-blue-600" />
               </div>
               <div>
@@ -167,8 +167,8 @@ export default function StudentDashboard() {
                 </p>
               </div>
             </div>
-            <ShadowCard className="p-5 flex items-center gap-4">
-              <div className="w-11 h-11 rounded-2xl bg-slate-100 flex items-center justify-center shrink-0">
+            <ShadowCard className="p-6 flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center shrink-0">
                 <CheckCircle2 className="w-5 h-5 text-slate-600" />
               </div>
               <div>
@@ -180,10 +180,10 @@ export default function StudentDashboard() {
         </div>
 
         {/* Row 2 — Action bento */}
-        <div className="grid grid-cols-12 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
 
           {/* Study time placeholder */}
-          <ShadowCard className="col-span-3 p-6">
+          <ShadowCard className="md:col-span-3 p-6">
             <p className="text-xs font-semibold uppercase tracking-widest text-slate-500 mb-4 flex items-center gap-1.5">
               <Clock className="w-3.5 h-3.5" /> Study Time
             </p>
@@ -195,7 +195,7 @@ export default function StudentDashboard() {
           </ShadowCard>
 
           {/* Up Next */}
-          <div className="col-span-5 bg-amber-50 rounded-3xl border border-amber-100 shadow-[0_4px_24px_-4px_rgba(245,158,11,0.16)] hover:shadow-[0_8px_32px_-4px_rgba(245,158,11,0.24)] hover:-translate-y-0.5 transition-all duration-200 p-6">
+          <div className="md:col-span-5 bg-amber-50 rounded-3xl border border-amber-100 shadow-[0_4px_24px_-4px_rgba(245,158,11,0.16)] hover:shadow-[0_8px_32px_-4px_rgba(245,158,11,0.24)] hover:-translate-y-0.5 transition-all duration-200 p-6">
             <p className="text-xs font-semibold uppercase tracking-widest text-amber-600 mb-4 flex items-center gap-1.5">
               <BookOpen className="w-3.5 h-3.5" /> Up Next
             </p>
@@ -219,12 +219,12 @@ export default function StudentDashboard() {
           </div>
 
           {/* Achievement card — real badge from DB */}
-          <Link href="/student/achievements">
+          <Link href="/student/achievements" className="md:col-span-4">
             <div
-              className="col-span-4 rounded-3xl border border-violet-100 shadow-[0_4px_24px_-4px_rgba(139,92,246,0.18)] hover:shadow-[0_8px_32px_-4px_rgba(139,92,246,0.28)] hover:-translate-y-0.5 transition-all duration-200 p-6 relative overflow-hidden cursor-pointer"
+              className="h-full rounded-3xl border border-violet-100 shadow-[0_4px_24px_-4px_rgba(139,92,246,0.18)] hover:shadow-[0_8px_32px_-4px_rgba(139,92,246,0.28)] hover:-translate-y-0.5 transition-all duration-200 p-6 relative overflow-hidden cursor-pointer"
               style={{ backgroundColor: "#f5f3ff", backgroundImage: `url('${getSceneImage((userId || 0) + 1)}')`, backgroundSize: "cover", backgroundPosition: "center" }}
             >
-              <div className="absolute inset-0 bg-violet-50/80 pl-[24px] pr-[24px] pt-[24px] pb-[24px]" />
+              <div className="absolute inset-0 bg-violet-50/80" />
               <Award className="absolute right-[-5%] bottom-[-10%] w-28 h-28 text-violet-200 opacity-60 z-10" />
               <div className="relative z-20">
                 <p className="text-xs font-semibold uppercase tracking-widest text-violet-500 mb-3 flex items-center gap-1.5">
