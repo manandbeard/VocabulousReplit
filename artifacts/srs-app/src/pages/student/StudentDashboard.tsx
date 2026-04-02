@@ -195,24 +195,22 @@ export default function StudentDashboard() {
           </ShadowCard>
 
           {/* Up Next */}
-          <div className="col-span-6 bg-amber-50 rounded-3xl border border-amber-100 shadow-[0_4px_24px_-4px_rgba(245,158,11,0.16)] hover:shadow-[0_8px_32px_-4px_rgba(245,158,11,0.24)] hover:-translate-y-0.5 transition-all duration-200 p-6">
+          <div className="col-span-4 bg-amber-50 rounded-3xl border border-amber-100 shadow-[0_4px_24px_-4px_rgba(245,158,11,0.16)] hover:shadow-[0_8px_32px_-4px_rgba(245,158,11,0.24)] hover:-translate-y-0.5 transition-all duration-200 p-6">
             <p className="text-xs font-semibold uppercase tracking-widest text-amber-600 mb-4 flex items-center gap-1.5">
               <BookOpen className="w-3.5 h-3.5" /> Up Next
             </p>
             {upNext ? (
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-lg font-bold text-slate-900">{upNext.deckName}</p>
-                  <p className="text-sm text-slate-500 mt-0.5">
-                    <span className="font-semibold text-slate-900">{upNext.dueToday}</span> cards due
-                  </p>
-                </div>
+              <>
+                <p className="text-lg font-bold text-slate-900">{upNext.deckName}</p>
+                <p className="text-xs text-slate-500 mt-1">
+                  <span className="font-semibold text-slate-900">{upNext.dueToday}</span> cards due
+                </p>
                 <Link href="/student/study">
-                  <span className="flex items-center gap-1.5 text-sm font-bold text-amber-700 bg-amber-100 px-4 py-2 rounded-xl cursor-pointer hover:bg-amber-200 transition-colors">
+                  <span className="flex items-center justify-center gap-1.5 text-sm font-bold text-white bg-amber-500 hover:bg-amber-600 px-4 py-2.5 rounded-xl cursor-pointer transition-colors w-full mt-4">
                     Study <ChevronRight className="w-4 h-4" />
                   </span>
                 </Link>
-              </div>
+              </>
             ) : (
               <p className="text-sm text-slate-500">All caught up! No cards due.</p>
             )}
@@ -221,7 +219,7 @@ export default function StudentDashboard() {
           {/* Achievement card — real badge from DB */}
           <Link href="/student/achievements">
             <div
-              className="col-span-3 rounded-3xl border border-violet-100 shadow-[0_4px_24px_-4px_rgba(139,92,246,0.18)] hover:shadow-[0_8px_32px_-4px_rgba(139,92,246,0.28)] hover:-translate-y-0.5 transition-all duration-200 p-6 relative overflow-hidden cursor-pointer"
+              className="col-span-3 rounded-3xl border border-violet-100 shadow-[0_4px_24px_-4px_rgba(139,92,246,0.18)] hover:shadow-[0_8px_32px_-4px_rgba(139,92,246,0.28)] hover:-translate-y-0.5 transition-all duration-200 p-6 relative overflow-hidden cursor-pointer flex flex-col justify-between"
               style={{ backgroundColor: "#f5f3ff", backgroundImage: `url('${getSceneImage((userId || 0) + 1)}')`, backgroundSize: "cover", backgroundPosition: "center" }}
             >
               <div className="absolute inset-0 bg-gradient-to-br from-white/95 via-violet-50/92 to-violet-100/90" />
@@ -232,20 +230,32 @@ export default function StudentDashboard() {
                 </p>
                 {latestEarned ? (
                   <>
-                    <p className="text-3xl mb-2">{latestEarned.achievement.icon}</p>
-                    <p className="text-base font-black text-slate-900 leading-tight">{latestEarned.achievement.name}</p>
-                    <p className="text-xs text-slate-600 mt-2">{latestEarned.achievement.description}</p>
+                    <p className="text-2xl mb-1">{latestEarned.achievement.icon}</p>
+                    <p className="text-sm font-black text-slate-900 leading-tight">{latestEarned.achievement.name}</p>
+                    <p className="text-xs text-slate-600 mt-1">{latestEarned.achievement.description}</p>
                   </>
                 ) : (
                   <>
-                    <p className="text-base font-black text-slate-900">Keep going! 💪</p>
-                    <p className="text-xs text-slate-600 mt-2">Build your streak to earn badges</p>
+                    <p className="text-sm font-black text-slate-900">Keep going! 💪</p>
+                    <p className="text-xs text-slate-600 mt-1">Build your streak to earn badges</p>
                   </>
                 )}
-                <p className="text-[10px] text-violet-500 mt-3 font-semibold">View all badges →</p>
               </div>
             </div>
           </Link>
+
+          {/* Quick start CTA */}
+          <ShadowCard className="col-span-2 p-6 flex flex-col justify-between items-center text-center gap-3">
+            <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center">
+              <PlayCircle className="w-6 h-6 text-slate-500" />
+            </div>
+            <p className="text-sm text-slate-500 font-medium">{dueTotal} cards due</p>
+            <Link href="/student/study">
+              <span className="w-full inline-flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-slate-900 text-white text-sm font-bold hover:bg-slate-800 transition-colors cursor-pointer">
+                Study All
+              </span>
+            </Link>
+          </ShadowCard>
         </div>
 
         {/* Enrolled Classes */}
