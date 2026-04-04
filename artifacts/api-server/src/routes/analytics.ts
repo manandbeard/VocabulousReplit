@@ -75,7 +75,45 @@ router.get("/analytics/teacher/:teacherId", async (req, res): Promise<void> => {
     .where(eq(classesTable.teacherId, teacherId))
     .groupBy(classesTable.id);
 
-  const classBreakdown = classRows.map((c) => ({ ...c, atRiskCount: 0 }));
+  // Compute actual at-risk counts per class using the same criteria as /at-risk endpoint:
+  // A student is at risk if they have no reviews in 7+ days, retention < 0.75, or 2+ overdue cards.
+  const atRiskRows = await db
+    .select({
+      classId: enrollmentsTable.classId,
+      atRiskCount: sql<number>`
+        cast(count(distinct case when (
+          not exists (
+            select 1 from ${reviewsTable} r2
+            where r2.student_id = ${enrollmentsTable.studentId}
+          )
+          or (
+            select max(r3.reviewed_at) from ${reviewsTable} r3
+            where r3.student_id = ${enrollmentsTable.studentId}
+          ) < now() - interval '7 days'
+          or coalesce((
+            select avg(case when r4.recalled then 1.0 else 0.0 end)
+            from ${reviewsTable} r4
+            where r4.student_id = ${enrollmentsTable.studentId}
+          ), 0) < 0.75
+          or (
+            select count(distinct cs2.card_id)
+            from ${cardStatesTable} cs2
+            where cs2.student_id = ${enrollmentsTable.studentId}
+              and cs2.next_review_at <= now()
+          ) > 2
+        ) then ${enrollmentsTable.studentId} end) as int)
+      `,
+    })
+    .from(enrollmentsTable)
+    .innerJoin(classesTable, eq(enrollmentsTable.classId, classesTable.id))
+    .where(eq(classesTable.teacherId, teacherId))
+    .groupBy(enrollmentsTable.classId);
+
+  const atRiskMap = new Map(atRiskRows.map((r) => [r.classId, r.atRiskCount]));
+  const classBreakdown = classRows.map((c) => ({
+    ...c,
+    atRiskCount: atRiskMap.get(c.classId) ?? 0,
+  }));
 
   const avgRetention =
     classBreakdown.length > 0
