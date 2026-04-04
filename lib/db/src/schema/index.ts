@@ -5,3 +5,6 @@ export * from "./cards";
 export * from "./reviews";
 export * from "./changelog";
 export * from "./achievements";
+export * from "./assessments";
+export * from "./student-models";
+export * from "./alerts";
