@@ -27,7 +27,7 @@ const router: IRouter = Router();
 //   D'          = w5·D_0(4) + (1-w5)·(D + (-w6·(G-3))·(10-D)/9)
 // ──────────────────────────────────────────────────────────────────────────────
 
-// FSRS-5 default parameter vector (21 values, w0–w20)
+// FSRS-5 default parameter vector (19 values, w0–w18)
 const W = [
   0.40255, // w0  initial stability for grade 1 (Again)
   1.18385, // w1  initial stability for grade 2 (Hard)
@@ -134,7 +134,8 @@ function computeNextReview(
 
   // Schedule next review so that R at review time ≈ 0.90
   // By definition of S, t=S gives R≈0.90, so interval = S days.
-  const intervalDays = Math.max(1, Math.round(newStability));
+  // Use ceil to avoid rounding small stability values below 1 day.
+  const intervalDays = Math.max(1, Math.ceil(newStability));
   const nextReviewAt = new Date();
   nextReviewAt.setDate(nextReviewAt.getDate() + intervalDays);
 
