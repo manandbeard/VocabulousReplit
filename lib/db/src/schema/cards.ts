@@ -24,6 +24,13 @@ export const cardsTable = pgTable("cards", {
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),
 });
 
-export const insertCardSchema = createInsertSchema(cardsTable).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertCardSchema = createInsertSchema(cardsTable)
+  .omit({ id: true, createdAt: true, updatedAt: true })
+  .refine(
+    (data) =>
+      data.cardType !== "multiple_choice" ||
+      (Array.isArray(data.mcOptions) && data.mcOptions.length >= 2 && data.mcCorrectIndex != null),
+    { message: "multiple_choice cards require mcOptions (≥2 items) and mcCorrectIndex" },
+  );
 export type InsertCard = z.infer<typeof insertCardSchema>;
 export type Card = typeof cardsTable.$inferSelect;
