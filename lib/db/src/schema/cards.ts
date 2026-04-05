@@ -26,11 +26,35 @@ export const cardsTable = pgTable("cards", {
 
 export const insertCardSchema = createInsertSchema(cardsTable)
   .omit({ id: true, createdAt: true, updatedAt: true })
-  .refine(
-    (data) =>
-      data.cardType !== "multiple_choice" ||
-      (Array.isArray(data.mcOptions) && data.mcOptions.length >= 2 && data.mcCorrectIndex != null),
-    { message: "multiple_choice cards require mcOptions (≥2 items) and mcCorrectIndex" },
-  );
+  .superRefine((data, ctx) => {
+    if (data.cardType !== "multiple_choice") return;
+
+    const mcOptionsValidation = z.array(z.string()).min(2).safeParse(data.mcOptions);
+    if (!mcOptionsValidation.success) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["mcOptions"],
+        message: "multiple_choice cards require mcOptions as a string array with at least 2 items",
+      });
+      return;
+    }
+
+    if (!Number.isInteger(data.mcCorrectIndex)) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["mcCorrectIndex"],
+        message: "multiple_choice cards require mcCorrectIndex as an integer",
+      });
+      return;
+    }
+
+    if (data.mcCorrectIndex! < 0 || data.mcCorrectIndex! >= mcOptionsValidation.data.length) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["mcCorrectIndex"],
+        message: "mcCorrectIndex must be within the range of mcOptions",
+      });
+    }
+  });
 export type InsertCard = z.infer<typeof insertCardSchema>;
 export type Card = typeof cardsTable.$inferSelect;
