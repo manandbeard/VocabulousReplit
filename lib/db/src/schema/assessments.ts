@@ -3,15 +3,19 @@ import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 import { usersTable } from "./users";
 import { classesTable } from "./classes";
+import { decksTable } from "./decks";
 
 export const assessmentsTable = pgTable("assessments", {
   id: serial("id").primaryKey(),
   classId: integer("class_id").references(() => classesTable.id),
+  deckId: integer("deck_id").references(() => decksTable.id),
   teacherId: integer("teacher_id").notNull().references(() => usersTable.id),
   title: text("title").notNull(),
   description: text("description"),
-  type: text("type").notNull().$type<"quiz" | "exam" | "practice">().default("quiz"),
+  assessmentType: text("assessment_type").notNull().$type<"quiz" | "test" | "exam" | "practice">().default("quiz"),
   maxScore: integer("max_score"),
+  scheduledAt: timestamp("scheduled_at", { withTimezone: true }),
+  dueAt: timestamp("due_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),
 });
