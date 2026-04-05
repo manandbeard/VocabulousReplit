@@ -75,7 +75,55 @@ router.get("/analytics/teacher/:teacherId", async (req, res): Promise<void> => {
     .where(eq(classesTable.teacherId, teacherId))
     .groupBy(classesTable.id);
 
-  const classBreakdown = classRows.map((c) => ({ ...c, atRiskCount: 0 }));
+  // Compute actual at-risk counts per class using the same criteria as /at-risk endpoint:
+  // A student is at risk if they have no reviews in 7+ days, retention < 0.75, or 2+ overdue cards.
+  // We do this in two steps to avoid correlated subqueries:
+  //   Step 1 — aggregate per-student review stats and overdue counts in a single pass.
+  //   Step 2 — group those student-level results by class and count at-risk students.
+  const studentStats = await db
+    .select({
+      studentId: enrollmentsTable.studentId,
+      classId: enrollmentsTable.classId,
+      lastReviewedAt: sql<string | null>`max(${reviewsTable.reviewedAt})`,
+      averageRetention: sql<number | null>`
+        case when count(${reviewsTable.id}) > 0
+        then cast(avg(case when ${reviewsTable.recalled} then 1.0 else 0.0 end) as double precision)
+        else null end
+      `,
+      cardsOverdue: sql<number>`
+        cast(count(distinct ${cardStatesTable.cardId}) filter (
+          where ${cardStatesTable.nextReviewAt} <= now()
+        ) as int)
+      `,
+    })
+    .from(enrollmentsTable)
+    .innerJoin(classesTable, eq(enrollmentsTable.classId, classesTable.id))
+    .leftJoin(reviewsTable, eq(enrollmentsTable.studentId, reviewsTable.studentId))
+    .leftJoin(cardStatesTable, eq(enrollmentsTable.studentId, cardStatesTable.studentId))
+    .where(eq(classesTable.teacherId, teacherId))
+    .groupBy(enrollmentsTable.studentId, enrollmentsTable.classId);
+
+  // Count at-risk students per class
+  const atRiskMap = new Map<number, number>();
+  const now = new Date();
+  for (const s of studentStats) {
+    const daysSinceLastReview = s.lastReviewedAt
+      ? (now.getTime() - new Date(s.lastReviewedAt).getTime()) / 86_400_000
+      : null;
+    const isAtRisk =
+      daysSinceLastReview === null ||
+      daysSinceLastReview > 7 ||
+      (s.averageRetention !== null && s.averageRetention < 0.75) ||
+      s.cardsOverdue >= 2;
+    if (isAtRisk) {
+      atRiskMap.set(s.classId, (atRiskMap.get(s.classId) ?? 0) + 1);
+    }
+  }
+
+  const classBreakdown = classRows.map((c) => ({
+    ...c,
+    atRiskCount: atRiskMap.get(c.classId) ?? 0,
+  }));
 
   const avgRetention =
     classBreakdown.length > 0
