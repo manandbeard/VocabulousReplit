@@ -10,7 +10,7 @@ export const studentModelsTable = pgTable("student_models", {
   classId: integer("class_id").references(() => classesTable.id),
   modelVersion: text("model_version").notNull().default("v1"),
   adaptationPhase: text("adaptation_phase").notNull().default("cold_start").$type<"cold_start" | "warming" | "adapted">(),
-  metaParams: jsonb("meta_params").$type<Record<string, number>>(),
+  metaParams: jsonb("meta_params").$type<Record<string, unknown>>(),
   lastUpdatedAt: timestamp("last_updated_at", { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
