@@ -1,5 +1,5 @@
 import { useLocation } from "wouter";
-import { BookOpen, BarChart3, Settings, LogOut, Home, Rocket, Presentation, ChevronDown, Info, BrainCircuit, TrendingUp } from "lucide-react";
+import { BookOpen, BarChart3, Settings, LogOut, Home, Rocket, Presentation, ChevronDown, Info, BrainCircuit, TrendingUp, GraduationCap, Users } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import { useRole } from "@/hooks/use-role";
 
@@ -20,7 +20,58 @@ export function TopNav() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  if (!role) return null;
+  if (!role) {
+    return (
+      <nav className="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-sm">
+        <div className="max-w-7xl mx-auto px-8 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-2 font-bold text-slate-900">
+            <div className="w-6 h-6 rounded-lg bg-blue-600 flex items-center justify-center">
+              <span className="text-white text-xs font-black">V</span>
+            </div>
+            <span>Vocabulous²</span>
+          </div>
+
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => navigate("/build")}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                location === "/build" ? "text-blue-600 bg-blue-50" : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+              }`}
+            >
+              <Rocket className="w-4 h-4" />
+              Building in Public
+            </button>
+            <button
+              onClick={() => navigate("/pitch")}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                location === "/pitch" ? "text-blue-600 bg-blue-50" : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+              }`}
+            >
+              <Presentation className="w-4 h-4" />
+              Pitch Deck
+            </button>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => { setRole("teacher"); navigate("/teacher"); }}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border border-slate-300 text-slate-700 hover:border-slate-400 hover:bg-slate-50 transition-colors"
+            >
+              <GraduationCap className="w-4 h-4" />
+              Teacher Demo
+            </button>
+            <button
+              onClick={() => { setRole("student"); navigate("/student"); }}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+            >
+              <Users className="w-4 h-4" />
+              Student Demo
+            </button>
+          </div>
+        </div>
+      </nav>
+    );
+  }
 
   const navItems = role === "teacher" 
     ? [

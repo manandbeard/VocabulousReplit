@@ -1,5 +1,5 @@
 import { useLocation } from "wouter";
-import { ArrowRight, Brain, Zap, Target, BarChart3, Clock, Users, Activity } from "lucide-react";
+import { ArrowRight, Brain, Zap, Target, BarChart3, Clock, Users, Activity, RefreshCw } from "lucide-react";
 import { SynapticWeb } from "@/components/ui/synaptic-web";
 import { useRole } from "@/hooks/use-role";
 
@@ -69,20 +69,61 @@ export default function Landing() {
             <p className="text-blue-600/70 text-xs">Lightning fast sync</p>
           </div>
 
-          {/* Large Benefit 1 — 2 cols × 2 rows */}
-          <div className="md:col-span-2 md:row-span-2 bg-gradient-to-br from-white to-slate-50 rounded-3xl p-8 border border-slate-200 shadow-sm relative overflow-hidden group">
-            <div className="absolute top-0 right-0 p-8 opacity-5 transform translate-x-1/4 -translate-y-1/4 group-hover:scale-110 transition-transform duration-700">
-              <Brain className="w-64 h-64" />
-            </div>
-            <div className="relative z-10 h-full flex flex-col justify-between">
-              <div className="w-14 h-14 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center mb-6">
-                <Brain className="w-7 h-7" />
-              </div>
+          {/* Large Benefit 1 — 2 cols × 2 rows — Science Card */}
+          <div className="md:col-span-2 md:row-span-2 rounded-3xl p-8 border border-blue-100 shadow-sm relative overflow-hidden group" style={{ background: "linear-gradient(135deg, #eff6ff 0%, #f5f3ff 60%, #fdf4ff 100%)" }}>
+            {/* Subtle dot grid background */}
+            <div className="absolute inset-0 opacity-[0.035]" style={{ backgroundImage: "radial-gradient(circle at 1px 1px, rgb(99,102,241) 1px, transparent 0)", backgroundSize: "20px 20px" }} />
+
+            <div className="relative z-10 h-full flex flex-col gap-5">
+              {/* Header */}
               <div>
-                <h3 className="text-3xl font-bold mb-4 tracking-tight text-slate-900">Built on real learning science</h3>
-                <p className="text-slate-600 text-lg leading-relaxed">
-                  Leverages cognitive psychology principles of spaced repetition and active recall to encode information into long-term memory efficiently.
+                <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-blue-600 mb-3">
+                  <Brain className="w-3.5 h-3.5" />
+                  Cognitive Design
+                </div>
+                <h3 className="text-3xl font-bold tracking-tight text-slate-900 leading-tight">
+                  Built on real learning science
+                </h3>
+                <p className="text-slate-500 text-sm mt-2 leading-relaxed">
+                  Memory doesn't fade — it compounds with every review.
                 </p>
+              </div>
+
+              {/* Review interval timeline */}
+              <div className="flex-1 flex flex-col justify-center">
+                <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 mb-3">Review Intervals</p>
+                <div className="flex items-end gap-2 h-24">
+                  {[
+                    { label: "Day 1", h: "20%", from: "#93c5fd", to: "#60a5fa" },
+                    { label: "Day 3", h: "35%", from: "#60a5fa", to: "#818cf8" },
+                    { label: "Day 7", h: "52%", from: "#818cf8", to: "#a78bfa" },
+                    { label: "Day 14", h: "68%", from: "#a78bfa", to: "#c084fc" },
+                    { label: "Day 30", h: "82%", from: "#c084fc", to: "#d946ef" },
+                    { label: "∞", h: "100%", from: "#a855f7", to: "#7c3aed" },
+                  ].map(({ label, h, from, to }) => (
+                    <div key={label} className="flex flex-col items-center gap-1.5 flex-1 h-full justify-end">
+                      <div
+                        className="w-full rounded-t-md transition-opacity duration-300 group-hover:opacity-90"
+                        style={{ height: h, background: `linear-gradient(to top, ${from}, ${to})` }}
+                      />
+                      <span className="text-[9px] font-semibold text-slate-400 whitespace-nowrap">{label}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Three science pillars */}
+              <div className="grid grid-cols-3 gap-3 pt-4 border-t border-blue-100/80">
+                {[
+                  { icon: <RefreshCw className="w-3.5 h-3.5" />, label: "Spaced Repetition", iconBg: "bg-blue-100 text-blue-600" },
+                  { icon: <Zap className="w-3.5 h-3.5" />, label: "Active Recall", iconBg: "bg-violet-100 text-violet-600" },
+                  { icon: <Target className="w-3.5 h-3.5" />, label: "Adaptive Review", iconBg: "bg-purple-100 text-purple-600" },
+                ].map(({ icon, label, iconBg }) => (
+                  <div key={label} className="flex flex-col items-center text-center gap-2">
+                    <div className={`w-8 h-8 rounded-xl flex items-center justify-center ${iconBg}`}>{icon}</div>
+                    <span className="text-[11px] font-semibold text-slate-600 leading-tight">{label}</span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
