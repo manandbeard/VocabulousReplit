@@ -1,4 +1,4 @@
-import { pgTable, serial, timestamp, integer, real, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, timestamp, integer } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 import { usersTable } from "./users";
@@ -29,13 +29,13 @@ export const FSRS6_DEFAULT_PARAMS: number[] = [
 export const studentModelsTable = pgTable("student_models", {
   id: serial("id").primaryKey(),
   studentId: integer("student_id").notNull().unique().references(() => usersTable.id),
-  // Serialized array of 21 FSRS-6 parameters (w0–w20)
-  params: jsonb("params").notNull().$type<number[]>().$defaultFn(() => [...FSRS6_DEFAULT_PARAMS]),
-  reviewCount: integer("review_count").notNull().default(0),
-  lastUpdatedAt: timestamp("last_updated_at", { withTimezone: true }).notNull().defaultNow(),
-  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  modelWeights: text("model_weights").notNull(),
+  adaptationPhase: integer("adaptation_phase").notNull().default(1),
+  totalReviews: integer("total_reviews").notNull().default(0),
+  lastAdaptedAt: timestamp("last_adapted_at", { withTimezone: true }),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),
 });
 
-export const insertStudentModelSchema = createInsertSchema(studentModelsTable).omit({ id: true, createdAt: true, lastUpdatedAt: true });
+export const insertStudentModelSchema = createInsertSchema(studentModelsTable).omit({ id: true, updatedAt: true });
 export type InsertStudentModel = z.infer<typeof insertStudentModelSchema>;
 export type StudentModel = typeof studentModelsTable.$inferSelect;
