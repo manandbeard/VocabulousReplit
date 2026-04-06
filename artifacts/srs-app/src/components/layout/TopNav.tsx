@@ -1,15 +1,18 @@
 import { useLocation } from "wouter";
-import { BookOpen, BarChart3, Settings, LogOut, Home, Rocket, Presentation, ChevronDown, Info, BrainCircuit, TrendingUp, GraduationCap, Users } from "lucide-react";
+import { BookOpen, BarChart3, Settings, LogOut, Home, Rocket, Presentation, ChevronDown, Info, BrainCircuit, TrendingUp, LogIn, UserPlus } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import { useRole } from "@/hooks/use-role";
+import { useAuth, useClerk, useUser } from "@clerk/react";
 
 export function TopNav() {
-  const { role, setRole } = useRole();
+  const { role } = useRole();
+  const { isSignedIn } = useAuth();
+  const { signOut } = useClerk();
+  const { user } = useUser();
   const [location, navigate] = useLocation();
   const [infoOpen, setInfoOpen] = useState(false);
   const infoRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (infoRef.current && !infoRef.current.contains(event.target as Node)) {
@@ -20,16 +23,25 @@ export function TopNav() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  if (!role) {
+  const handleLogout = async () => {
+    await signOut();
+    navigate("/");
+  };
+
+  // Public nav — not signed in
+  if (!isSignedIn) {
     return (
       <nav className="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-8 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2 font-bold text-slate-900">
+          <button
+            onClick={() => navigate("/")}
+            className="flex items-center gap-2 font-bold text-slate-900 hover:opacity-80 transition-opacity"
+          >
             <div className="w-6 h-6 rounded-lg bg-blue-600 flex items-center justify-center">
               <span className="text-white text-xs font-black">V</span>
             </div>
             <span>Vocabulous²</span>
-          </div>
+          </button>
 
           <div className="flex items-center gap-1">
             <button
@@ -54,18 +66,18 @@ export function TopNav() {
 
           <div className="flex items-center gap-3">
             <button
-              onClick={() => { setRole("teacher"); navigate("/teacher"); }}
+              onClick={() => navigate("/sign-in")}
               className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border border-slate-300 text-slate-700 hover:border-slate-400 hover:bg-slate-50 transition-colors"
             >
-              <GraduationCap className="w-4 h-4" />
-              Enter as Teacher
+              <LogIn className="w-4 h-4" />
+              Sign in
             </button>
             <button
-              onClick={() => { setRole("student"); navigate("/student"); }}
+              onClick={() => navigate("/sign-up")}
               className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors"
             >
-              <Users className="w-4 h-4" />
-              Enter as Student
+              <UserPlus className="w-4 h-4" />
+              Sign up
             </button>
           </div>
         </div>
@@ -73,7 +85,31 @@ export function TopNav() {
     );
   }
 
-  const navItems = role === "teacher" 
+  // Signed in but no role yet (on /select-role) — minimal nav
+  if (!role) {
+    return (
+      <nav className="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-sm">
+        <div className="max-w-7xl mx-auto px-8 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-2 font-bold text-slate-900">
+            <div className="w-6 h-6 rounded-lg bg-blue-600 flex items-center justify-center">
+              <span className="text-white text-xs font-black">V</span>
+            </div>
+            <span>Vocabulous²</span>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-red-600 hover:bg-red-50 transition-colors"
+          >
+            <LogOut className="w-4 h-4" />
+            Sign out
+          </button>
+        </div>
+      </nav>
+    );
+  }
+
+  // Signed in with role — full role-specific nav
+  const navItems = role === "teacher"
     ? [
         { label: "Dashboard", href: "/teacher", icon: Home },
         { label: "Classes", href: "/teacher/classes", icon: BookOpen },
@@ -91,24 +127,22 @@ export function TopNav() {
     { label: "Pitch Deck", href: "/pitch", icon: Presentation },
   ];
 
-  const handleLogout = () => {
-    setRole(null);
-    navigate("/");
-  };
+  const displayName = user?.firstName ?? user?.emailAddresses?.[0]?.emailAddress ?? "Account";
 
   return (
     <nav className="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-sm">
       <div className="max-w-7xl mx-auto px-8 py-3 flex items-center justify-between">
-        {/* Left: Logo + Nav Links */}
         <div className="flex items-center gap-8">
-          <div className="flex items-center gap-2 font-bold text-slate-900">
+          <button
+            onClick={() => navigate(role === "teacher" ? "/teacher" : "/student")}
+            className="flex items-center gap-2 font-bold text-slate-900 hover:opacity-80 transition-opacity"
+          >
             <div className="w-6 h-6 rounded-lg bg-blue-600 flex items-center justify-center">
               <span className="text-white text-xs font-black">V</span>
             </div>
             <span>Vocabulous²</span>
-          </div>
+          </button>
 
-          {/* Navigation */}
           <div className="flex items-center gap-1">
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -119,9 +153,7 @@ export function TopNav() {
                   key={item.href}
                   onClick={() => navigate(item.href)}
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    isActive
-                      ? "text-blue-600 bg-blue-50"
-                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                    isActive ? "text-blue-600 bg-blue-50" : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
                   }`}
                 >
                   <Icon className="w-4 h-4" />
@@ -130,7 +162,6 @@ export function TopNav() {
               );
             })}
 
-            {/* Info Dropdown — Teacher only */}
             {role === "teacher" && (
               <div ref={infoRef} className="relative">
                 <button
@@ -150,14 +181,9 @@ export function TopNav() {
                       return (
                         <button
                           key={item.href}
-                          onClick={() => {
-                            navigate(item.href);
-                            setInfoOpen(false);
-                          }}
+                          onClick={() => { navigate(item.href); setInfoOpen(false); }}
                           className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium transition-colors first:rounded-t-lg last:rounded-b-lg ${
-                            isActive
-                              ? "bg-blue-50 text-blue-600"
-                              : "text-slate-700 hover:bg-slate-50"
+                            isActive ? "bg-blue-50 text-blue-600" : "text-slate-700 hover:bg-slate-50"
                           }`}
                         >
                           <Icon className="w-4 h-4" />
@@ -172,21 +198,24 @@ export function TopNav() {
           </div>
         </div>
 
-        {/* Right: User & Actions */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200">
+            <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500 to-violet-500 flex items-center justify-center text-white text-xs font-bold shrink-0">
+              {displayName.charAt(0).toUpperCase()}
+            </div>
+            <span className="text-sm font-medium text-slate-700 max-w-[120px] truncate">{displayName}</span>
+          </div>
           <button
             onClick={() => navigate("/settings")}
-            className="px-4 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors flex items-center gap-2"
+            className="p-2 rounded-lg text-slate-500 hover:text-slate-700 hover:bg-slate-100 transition-colors"
           >
             <Settings className="w-4 h-4" />
-            Settings
           </button>
           <button
             onClick={handleLogout}
-            className="px-4 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-red-600 hover:bg-red-50 transition-colors flex items-center gap-2"
+            className="p-2 rounded-lg text-slate-500 hover:text-red-600 hover:bg-red-50 transition-colors"
           >
             <LogOut className="w-4 h-4" />
-            Logout
           </button>
         </div>
       </div>

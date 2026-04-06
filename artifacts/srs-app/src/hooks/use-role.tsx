@@ -1,48 +1,27 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import { useUser } from "@clerk/react";
 
 export type Role = "teacher" | "student";
 
-interface RoleContextType {
+export interface RoleState {
   role: Role | null;
-  setRole: (role: Role) => void;
-  userId: number | null;
+  setRole: (role: Role) => Promise<void>;
+  userId: string | null;
+  isLoaded: boolean;
 }
 
-const RoleContext = createContext<RoleContextType | undefined>(undefined);
+export function useRole(): RoleState {
+  const { user, isLoaded } = useUser();
 
-export function RoleProvider({ children }: { children: ReactNode }) {
-  const [role, setRole] = useState<Role | null>(() => {
-    // Initialize from localStorage if available
-    if (typeof window !== "undefined") {
-      const stored = localStorage.getItem("vocabulous_role");
-      return (stored as Role | null) || null;
-    }
-    return null;
-  });
+  const role = isLoaded
+    ? ((user?.unsafeMetadata?.role as Role | undefined) ?? null)
+    : null;
 
-  // Save to localStorage whenever role changes
-  useEffect(() => {
-    if (role) {
-      localStorage.setItem("vocabulous_role", role);
-    } else {
-      localStorage.removeItem("vocabulous_role");
-    }
-  }, [role]);
+  const userId = user?.id ?? null;
 
-  // Mock IDs for the demo: Teacher is 1, Student is 2
-  const userId = role === "teacher" ? 1 : role === "student" ? 2 : null;
+  const setRole = async (newRole: Role) => {
+    if (!user) throw new Error("No authenticated user");
+    await user.update({ unsafeMetadata: { role: newRole } });
+  };
 
-  return (
-    <RoleContext.Provider value={{ role, setRole, userId }}>
-      {children}
-    </RoleContext.Provider>
-  );
-}
-
-export function useRole() {
-  const context = useContext(RoleContext);
-  if (context === undefined) {
-    throw new Error("useRole must be used within a RoleProvider");
-  }
-  return context;
+  return { role, setRole, userId, isLoaded };
 }

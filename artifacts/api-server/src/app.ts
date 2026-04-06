@@ -5,9 +5,11 @@ import { rateLimit } from "express-rate-limit";
 import pinoHttp from "pino-http";
 import path from "path";
 import fs from "fs";
+import { clerkMiddleware } from "@clerk/express";
 import router from "./routes";
 import { logger } from "./lib/logger";
 import { errorHandler } from "./middlewares/error-handler";
+import { CLERK_PROXY_PATH, clerkProxyMiddleware } from "./middlewares/clerkProxyMiddleware";
 
 const app: Express = express();
 
@@ -35,11 +37,17 @@ app.use(
   }),
 );
 
-app.use(cors());
+// Clerk proxy — must be before body parsers (streams raw bytes)
+app.use(CLERK_PROXY_PATH, clerkProxyMiddleware());
+
+app.use(cors({ credentials: true, origin: true }));
 
 // Body parsing with a 1 MB size cap
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true, limit: "1mb" }));
+
+// Clerk middleware — attaches auth info on every request
+app.use(clerkMiddleware());
 
 // General API rate limit: 300 requests per minute per IP
 const API_RATE_LIMIT_WINDOW_MS = 60 * 1000;

@@ -59,11 +59,9 @@ export default function Landing() {
 
           {/* Large Benefit 1 — 2 cols × 2 rows — Science Card */}
           <div className="md:col-span-2 md:row-span-2 rounded-3xl p-8 border border-blue-100 shadow-sm relative overflow-hidden group" style={{ background: "linear-gradient(135deg, #eff6ff 0%, #f5f3ff 60%, #fdf4ff 100%)" }}>
-            {/* Subtle dot grid background */}
             <div className="absolute inset-0 opacity-[0.035]" style={{ backgroundImage: "radial-gradient(circle at 1px 1px, rgb(99,102,241) 1px, transparent 0)", backgroundSize: "20px 20px" }} />
 
             <div className="relative z-10 h-full flex flex-col gap-5">
-              {/* Header */}
               <div>
                 <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-blue-600 mb-3">
                   <Brain className="w-3.5 h-3.5" />
@@ -77,7 +75,6 @@ export default function Landing() {
                 </p>
               </div>
 
-              {/* Review interval timeline */}
               <div className="flex-1 flex flex-col justify-center">
                 <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 mb-3">Review Intervals</p>
                 <div className="flex items-end gap-2 h-24">
@@ -100,7 +97,6 @@ export default function Landing() {
                 </div>
               </div>
 
-              {/* Three science pillars */}
               <div className="grid grid-cols-3 gap-3 pt-4 border-t border-blue-100/80">
                 {[
                   { icon: <RefreshCw className="w-3.5 h-3.5" />, label: "Spaced Repetition", iconBg: "bg-blue-100 text-blue-600" },
@@ -135,7 +131,7 @@ export default function Landing() {
             <h3 className="font-bold text-xl tracking-tight">Ready to start?</h3>
             <p className="text-sm text-slate-500 mb-2">Join thousands of learners today.</p>
             <button
-              onClick={() => navigate("/signup")}
+              onClick={() => navigate("/sign-up")}
               className="w-full py-3 px-6 text-white rounded-xl font-medium transition-all flex items-center justify-center gap-2 group"
               style={{ background: "linear-gradient(135deg, #2563eb 0%, #7c3aed 100%)" }}
             >
@@ -143,7 +139,7 @@ export default function Landing() {
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
             <button
-              onClick={() => navigate("/login")}
+              onClick={() => navigate("/sign-in")}
               className="w-full py-3 px-6 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-medium transition-colors flex items-center justify-center gap-2 group"
             >
               Sign in
