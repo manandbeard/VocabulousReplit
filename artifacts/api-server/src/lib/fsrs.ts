@@ -1,11 +1,20 @@
 /**
- * FSRS-6 scheduling wrapper using the official ts-fsrs package.
+ * FSRS-6 scheduling wrapper and custom math library.
  *
- * The ts-fsrs Card object is the canonical state. We map it to/from
- * our cardStatesTable rows using the helpers below.
+ * Two layers:
+ *  1. ts-fsrs integration — handles the state machine (New/Learning/Review/Relearning),
+ *     short-term learning steps, and card scheduling via the official ts-fsrs package.
+ *  2. Custom FSRS-6 math — pure functions accepting an explicit `w` parameter array
+ *     so that per-student personalised parameters can be substituted seamlessly.
+ *     Default population parameters come from `@workspace/db`.
  */
 import { createEmptyCard, fsrs, Rating, State, type Card as FSRSCard, type Grade } from "ts-fsrs";
 import type { CardState } from "@workspace/db";
+import { FSRS6_DEFAULT_PARAMS } from "@workspace/db";
+
+export { FSRS6_DEFAULT_PARAMS };
+
+// ─── ts-fsrs scheduler instance ───────────────────────────────────────────────
 
 // Default FSRS-6 scheduler for a school context:
 // - 90% target retention
@@ -16,6 +25,8 @@ export const scheduler = fsrs({
   enable_fuzz: true,
   enable_short_term: true,
 });
+
+// ─── Grade / State helpers ────────────────────────────────────────────────────
 
 /** Map a grade integer (1–4) to an FSRS Grade (Again/Hard/Good/Easy). */
 export function gradeToRating(grade: number): Grade {
@@ -49,6 +60,8 @@ export function stringToState(s: string | null | undefined): State {
   }
 }
 
+// ─── Card state mapping ───────────────────────────────────────────────────────
+
 /**
  * Reconstruct a ts-fsrs Card from a cardStatesTable row.
  * If no row exists (new card), returns a fresh empty card.
@@ -56,7 +69,6 @@ export function stringToState(s: string | null | undefined): State {
 export function cardStateToFSRS(state: CardState | undefined | null): FSRSCard {
   if (!state) return createEmptyCard();
 
-  // Build a complete Card object; learning_steps defaults to 0 for restored cards
   const card: FSRSCard = {
     due: state.nextReviewAt ? new Date(state.nextReviewAt) : new Date(),
     stability: state.stability,
@@ -72,49 +84,49 @@ export function cardStateToFSRS(state: CardState | undefined | null): FSRSCard {
   return card;
 }
 
+// ─── Scheduling entry point ───────────────────────────────────────────────────
+
 /**
  * Run the FSRS scheduler for a single review.
  * Returns the updated Card and the log entry.
  */
-export function scheduleReview(existingState: CardState | undefined | null, grade: number, now: Date) {
+export function scheduleReview(
+  existingState: CardState | undefined | null,
+  grade: number,
+  now: Date,
+) {
   const card = cardStateToFSRS(existingState);
   const rating = gradeToRating(grade);
   return scheduler.next(card, now, rating);
 }
 
+// ─── Retrievability (ts-fsrs) ─────────────────────────────────────────────────
+
 /**
- * Compute current retrievability (0–1) for a card state.
+ * Compute current retrievability (0–1) for a card state using ts-fsrs.
  * Returns null for cards that have never been reviewed.
  */
 export function computeRetrievability(
-  state: Pick<CardState, "stability" | "lastReviewedAt" | "nextReviewAt" | "scheduledDays" | "reviewCount" | "lapses" | "fsrsState"> | null | undefined,
+  state: Pick<
+    CardState,
+    "stability" | "lastReviewedAt" | "nextReviewAt" | "scheduledDays" | "reviewCount" | "lapses" | "fsrsState"
+  > | null | undefined,
   now: Date,
 ): number | null {
   if (!state?.lastReviewedAt) return null;
 
   const card = cardStateToFSRS(state as CardState);
   return scheduler.get_retrievability(card, now, false);
- * FSRS-6 scheduling math.
- *
- * All pure functions accept an explicit `w` parameter array so that
- * per-student personalised parameters can be substituted seamlessly.
- * The default population parameters are imported from `@workspace/db` so
- * there is a single authoritative source of truth.
- */
+}
 
-import { FSRS6_DEFAULT_PARAMS } from "@workspace/db";
-
-export { FSRS6_DEFAULT_PARAMS };
-
-// ─── Core constants ───────────────────────────────────────────────────────────
+// ─── Custom FSRS-6 math (for per-student personalised parameters) ─────────────
 
 /** Difficulty is clamped to the range [MIN_DIFFICULTY, MAX_DIFFICULTY]. */
 const MIN_DIFFICULTY = 1;
 const MAX_DIFFICULTY = 10;
 
 /**
- * Power-law forgetting curve: R(t, S) = (0.9^(1/S))^(t^w20)
- * Equivalent to: 0.9^(t^w20 / S)
+ * Power-law forgetting curve: R(t, S) = 0.9^(t^w20 / S)
  */
 export function retrievability(
   elapsedDays: number,
@@ -133,7 +145,10 @@ export function initialDifficulty(
   grade: number,
   w: number[] = FSRS6_DEFAULT_PARAMS,
 ): number {
-  return Math.min(MAX_DIFFICULTY, Math.max(MIN_DIFFICULTY, w[4] - Math.exp(w[5] * (grade - 1)) + 1));
+  return Math.min(
+    MAX_DIFFICULTY,
+    Math.max(MIN_DIFFICULTY, w[4] - Math.exp(w[5] * (grade - 1)) + 1),
+  );
 }
 
 /**
@@ -154,13 +169,13 @@ export interface NextReviewResult {
 }
 
 /**
- * Full FSRS-6 state transition.
+ * Full FSRS-6 state transition using personalised parameter vector `w`.
  *
- * @param grade        1=Again, 2=Hard, 3=Good, 4=Easy
- * @param prevStability null on the first review of a card
+ * @param grade          1=Again, 2=Hard, 3=Good, 4=Easy
+ * @param prevStability  null on the first review of a card
  * @param prevDifficulty null on the first review of a card
- * @param elapsedDays  Days since the last review (0 for first review)
- * @param w            FSRS-6 parameter array (defaults to population params)
+ * @param elapsedDays    Days since the last review (0 for first review)
+ * @param w              FSRS-6 parameter array (defaults to population params)
  */
 export function computeNextReview(
   grade: number,
@@ -216,7 +231,10 @@ export function computeNextReview(
     const dPrime = D + deltaD * ((MAX_DIFFICULTY - D) / (MAX_DIFFICULTY - MIN_DIFFICULTY));
     // D' = w5 · D_0(grade=4) + (1 - w5) · D''   (mean reversion)
     const d0Easy = initialDifficulty(4, w);
-    newDifficulty = Math.min(MAX_DIFFICULTY, Math.max(MIN_DIFFICULTY, w[5] * d0Easy + (1 - w[5]) * dPrime));
+    newDifficulty = Math.min(
+      MAX_DIFFICULTY,
+      Math.max(MIN_DIFFICULTY, w[5] * d0Easy + (1 - w[5]) * dPrime),
+    );
   }
 
   // Interval = stability (days until 90% retention), minimum 1 day

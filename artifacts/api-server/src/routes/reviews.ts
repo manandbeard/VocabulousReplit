@@ -2,8 +2,13 @@ import { Router, type IRouter } from "express";
 import { eq, and, lte, or, isNull, sql } from "drizzle-orm";
 import { db, reviewsTable, cardStatesTable, cardsTable, studentModelsTable, usersTable } from "@workspace/db";
 import { checkAndIssueStudentAchievements } from "../lib/check-achievements";
-import { scheduleReview, computeRetrievability, stateToString } from "../lib/fsrs";
-import { computeNextReview, retrievability, FSRS6_DEFAULT_PARAMS } from "../lib/fsrs";
+import {
+  scheduleReview,
+  computeRetrievability,
+  stateToString,
+  computeNextReview,
+  FSRS6_DEFAULT_PARAMS,
+} from "../lib/fsrs";
 import {
   SubmitReviewBody,
   GetDueCardsParams,
@@ -68,7 +73,6 @@ router.post("/reviews", async (req, res): Promise<void> => {
   const { studentId, cardId, deckId, grade } = parsed.data;
   const now = new Date();
 
-  // Fetch the current card state (may be undefined for a brand-new card)
   const recalled = grade >= 2;
 
   // Load per-student FSRS-6 parameters (or population defaults)
@@ -80,24 +84,15 @@ router.post("/reviews", async (req, res): Promise<void> => {
     .from(cardStatesTable)
     .where(and(eq(cardStatesTable.studentId, studentId), eq(cardStatesTable.cardId, cardId)));
 
-  // Compute elapsed days server-side from the stored last-review timestamp
+  // Compute elapsed days server-side from the stored last-review timestamp.
+  // This is the true inter-review interval required by FSRS-6, not the
+  // time the student spent looking at the card during the current session.
   const elapsedDays = state?.lastReviewedAt
     ? (now.getTime() - new Date(state.lastReviewedAt).getTime()) / MS_PER_DAY
     : 0;
 
   // Run the FSRS-6 scheduler via ts-fsrs
   const { card: newCard } = scheduleReview(state, grade, now);
-
-  const recalled = grade >= 2;
-
-  // Persist the review log
-  // Compute elapsed days server-side from the last review timestamp.
-  // This is the true inter-review interval required by FSRS-6, not the
-  // time the student spent looking at the card during the current session.
-  const elapsedDays =
-    state?.lastReviewedAt
-      ? (Date.now() - new Date(state.lastReviewedAt).getTime()) / MS_PER_DAY
-      : 0;
 
   const { newStability, newDifficulty, nextReviewAt } = computeNextReview(
     grade,
@@ -142,8 +137,7 @@ router.post("/reviews", async (req, res): Promise<void> => {
     await db.insert(cardStatesTable).values({ studentId, cardId, deckId, ...stateData });
   }
 
-  // Fire-and-forget achievement check
-  // Update streak columns on the users table
+  // Update last study date on the user record
   await db
     .update(usersTable)
     .set({ lastStudyDate: new Date() })
@@ -213,6 +207,7 @@ router.get("/students/:studentId/due-cards", async (req, res): Promise<void> => 
     .orderBy(sql`${cardStatesTable.nextReviewAt} asc nulls first`)
     .limit(50);
 
+  // Compute predicted retention using the power-law retrievability formula
   const result = dueCards.map((card) => {
     const stateForCalc = card.lastReviewedAt
       ? {
@@ -228,13 +223,6 @@ router.get("/students/:studentId/due-cards", async (req, res): Promise<void> => 
       : null;
 
     const predictedRetention = computeRetrievability(stateForCalc, now);
-  // Compute predicted retention using the same power-law formula as the scheduler
-  const result = dueCards.map((card) => {
-    let predictedRetention: number | null = null;
-    if (card.stabilityDays && card.lastReviewedAt) {
-      const daysSince = (now.getTime() - new Date(card.lastReviewedAt).getTime()) / MS_PER_DAY;
-      predictedRetention = retrievability(daysSince, card.stabilityDays, w);
-    }
     return { ...card, predictedRetention };
   });
 
